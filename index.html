@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>parking</title>
+    <link rel="stylesheet" href="static/css/reset.css">
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+</body>
+<script src='static/js/jquery-1.11.1.min.js'></script>
+<script src='static/js/cityDatas.js'></script>
+<script src="static/js/aes.js"></script>
+<script>
+    function encrypt(word) {
+        var key = CryptoJS.enc.Utf8.parse("hissAirIsGood123");
+        var iv = CryptoJS.enc.Utf8.parse('dMitHORyqbeYVE0o');
+        var srcs = CryptoJS.enc.Utf8.parse(word);
+        //var encrypted = CryptoJS.AES.encrypt(srcs, key, {mode:CryptoJS.mode.ECB,padding: CryptoJS.pad.Pkcs7});
+        var encrypted = CryptoJS.AES.encrypt(srcs, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 });  //CryptoJS.pad.Pkcs7
+        return encrypted.toString();
+    }
+    console.log(encrypt(123));
+
+   
+   
+  
+</script>
+
+</html>
