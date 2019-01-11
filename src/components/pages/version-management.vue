@@ -72,7 +72,7 @@
               <td style="width:15%">{{item.remark}}</td>
               <td>{{item.createUserName}}</td>
 
-              <td>{{item.createTime}}</td>
+              <td>{{item.createTime|formatTime('YMD')}}</td>
 
               <td style="width:15%">
                 <el-button size="mini" @click="getDescribe($event)" :detail-id="item.id">详情</el-button>

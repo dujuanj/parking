@@ -83,7 +83,7 @@
               <td>{{item.pushGroup}}</td>
               <td>{{item.publisher}}</td>
              
-              <td>{{item.publishTime}}</td>
+              <td>{{item.publishTime|formatTime('YMD')}}</td>
               
               <td>{{item.jumpUrl}}</td>
 
@@ -133,7 +133,7 @@
           style="color:#000"
           prop="serverId"
         >
-         <el-input autocomplete="off" v-model="ruleForm.title"></el-input>
+         <el-input autocomplete="off" v-model="ruleForm.title" placeholder="请输入标题"></el-input>
         </el-form-item>
 
         <el-form-item
@@ -168,7 +168,7 @@
           style="color:#000"
           prop="isBindParkingLot"
         >
-          <el-input type="textarea" v-model="ruleForm.text"></el-input>
+          <el-input type="textarea" v-model="ruleForm.text" placeholder="请输入内容"></el-input>
         </el-form-item>
         <el-form-item
           label="跳转链接:"
@@ -176,7 +176,7 @@
           style="color:#000"
           prop="parkingLotId"
         >
-         <el-input v-model="ruleForm.jumpUrl"></el-input>
+         <el-input v-model="ruleForm.jumpUrl" placeholder="请输入跳转链接"></el-input>
         </el-form-item>
         <el-form-item
           label="推送群体:"

@@ -18,13 +18,13 @@
           <option value="HISS停车APP">HISS停车APP</option>
           <option value="其它">其它</option>
         </select>
-         <select v-model="feedbackType" @change="handleUserList(1)" class="myselect">
+         <!-- <select v-model="feedbackType" @change="handleUserList(1)" class="myselect">
           <option value>选择反馈类型(全部)</option>
           <option value="APP建议">APP建议</option>
            <option value="地锁故障">地锁故障</option>
             <option value="产品建议">产品建议</option>
           
-        </select>
+        </select> -->
        
        
        
@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       //筛选
-      feedbackType: "",
+      // feedbackType: "",
       feedbackPath: "",
       
 
@@ -126,7 +126,7 @@ export default {
             pageNumber: currentpage,
             pageSize: this.pagesize,
             feedbackPath:this.feedbackPath,
-            feedbackType:this.feedbackType
+            // feedbackType:this.feedbackType
            
           },
           {
@@ -147,7 +147,7 @@ export default {
     },
     //重置
     reset() {
-      this.feedbackType='';
+      // this.feedbackType='';
       this.feedbackPath='';
       this.handleUserList(1);
     },

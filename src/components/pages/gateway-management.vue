@@ -124,7 +124,7 @@
       <p style="width:100%;color: #67c23a;margin-top: -25px;margin-bottom: 17px">填写网关信息>>></p>
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
         <el-form-item label="网关名称:" :label-width="formLabelWidth" style="color:#000" prop="name">
-          <el-input autocomplete="off" v-model="ruleForm.name"></el-input>
+          <el-input autocomplete="off" v-model="ruleForm.name" placeholder="输入网关名称"></el-input>
         </el-form-item>
         <el-form-item
           label="网关编号:"
@@ -132,7 +132,7 @@
           style="color:#000"
           prop="gatewayMac"
         >
-          <el-input autocomplete="off" v-model="ruleForm.gatewayMac"></el-input>
+          <el-input autocomplete="off" v-model="ruleForm.gatewayMac" placeholder="输入网关编号"></el-input>
         </el-form-item>
         <el-form-item
           label="服务器网卡:"
@@ -152,8 +152,9 @@
           :label-width="formLabelWidth"
           style="color:#000"
           prop="license"
+         
         >
-          <el-input autocomplete="off" v-model="ruleForm.license"></el-input>
+          <el-input autocomplete="off" v-model="ruleForm.license"  placeholder="输入授权license"></el-input>
         </el-form-item>
 
         <p style="width:100%;color: #67c23a;margin-top:0;margin-bottom: 17px">填写绑定信息 >>></p>

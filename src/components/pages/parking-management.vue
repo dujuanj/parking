@@ -94,20 +94,20 @@
       <p style="width:100%;color: #67c23a;margin-top: -25px;margin-bottom: 17px">填写停车场基本信息>>></p>
       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
         <el-form-item label="停车场名称:" :label-width="formLabelWidth" style="color:#000" prop="name">
-          <el-input v-model="ruleForm.name" placeholder></el-input>
+          <el-input v-model="ruleForm.name" placeholder='输入停车场名称'></el-input>
         </el-form-item>
         <el-form-item
-          label="*总面积数:"
+          label="总面积数:"
           :label-width="formLabelWidth"
           style="color:#000"
           prop="acreage"
         >
-          <el-input v-model="ruleForm.acreage" style="width:41%"></el-input>m²
+          <el-input v-model="ruleForm.acreage" style="width:41%" placeholder='输入总面积'></el-input>m²
         </el-form-item>
         <el-form-item label="*省市区:" :label-width="formLabelWidth">
           <!-- <el-cascader size="large" :options="options" @change="handleChange"></el-cascader> -->
           <select id="province1" name="province" v-model="prov" style="height:40px;width:100px;">
-            <option v-for="option in arr" :value="option.name">{{option.name }}</option>
+            <option v-for="option in arr" :value="option.name" >{{option.name }}</option>
           </select>
           
           <select id="city1" name="city" v-model="dcity" style="height:40px;width:100px">
@@ -124,7 +124,7 @@
           </select>
         </el-form-item>
         <el-form-item label="详细地址:" :label-width="formLabelWidth" style="color:#000" prop="street">
-          <el-input autocomplete="off" v-model="ruleForm.street"></el-input>
+          <el-input autocomplete="off" v-model="ruleForm.street" placeholder='输入详细地址'></el-input>
         </el-form-item>
         <!-- 图片上传 -->
         <el-form-item label="平面图:" :label-width="formLabelWidth" style="color:#000">
@@ -179,12 +179,14 @@
           prop="isFreeAccess"
         >
           <select v-model="ruleForm.isFreeAccess" placeholder="选择出入方式" class="form-control">
+            <option value="">选择出入方式</option>
             <option value="1">自由出入</option>
             <option value="0">先预定</option>
           </select>
         </el-form-item>
         <el-form-item label="位置:" :label-width="formLabelWidth" style="color:#000" prop="position">
           <select v-model="ruleForm.position" placeholder="选择位置" class="form-control">
+            <option value="">选择位置</option>
             <option value="1">地上</option>
             <option value="0">地下</option>
             <option value="2">地上+地下</option>
@@ -197,6 +199,7 @@
           prop="isChargingPile"
         >
           <select v-model="ruleForm.isChargingPile" placeholder="选择充电桩" class="form-control">
+            <option value="">选择充电桩</option>
             <option value="1">有</option>
             <option value="0">无</option>
           </select>
@@ -212,6 +215,7 @@
             placeholder="选择大型车"
             class="form-control"
           >
+           <option value="">选择大型车</option>
             <option value="1">支持</option>
             <option value="0">不支持</option>
           </select>
@@ -223,6 +227,7 @@
           prop="openStatus"
         >
           <select v-model="ruleForm.openStatus" placeholder="选择开放状态" class="form-control">
+            <option value="">选择开放状态</option>
             <option value="1">开放</option>
             <option value="0">隐藏</option>
           </select>
@@ -241,6 +246,7 @@
             autocomplete="off"
             style="width:41%"
             v-model="ruleForm.chargeGroup.chargeManagement[0].freeTime"
+            placeholder="输入免费时长"
           ></el-input>分钟
           <div class="el-form-item__error" v-if="freeError">请填写免费时长，不能为空</div>
         </el-form-item>
@@ -250,6 +256,7 @@
             autocomplete="off"
             style="width:41%"
             v-model="ruleForm.chargeGroup.chargeManagement[0].money"
+            placeholder="输入价格"
           ></el-input>元
           <div class="el-form-item__error" v-if="priceError">请填写价格，不能为空</div>
           <select
@@ -277,6 +284,7 @@
             autocomplete="off"
             style="width:41%"
             v-model="ruleForm.chargeGroup.chargeManagement[1].freeTime"
+             placeholder="输入免费时长"
           ></el-input>分钟
            <div class="el-form-item__error" v-if="freeError1">请填写免费时长，不能为空</div>
         </el-form-item>
@@ -285,6 +293,7 @@
             autocomplete="off"
             style="width:41%"
             v-model="ruleForm.chargeGroup.chargeManagement[1].money"
+              placeholder="输入价格"
           ></el-input>元
            <div class="el-form-item__error" v-if="priceError1">请填写价格，不能为空</div>
           <select
