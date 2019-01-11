@@ -190,13 +190,13 @@
             <option value="0">不绑定</option>
           </select>
         </el-form-item>
-        <el-form-item label="*业主姓名:" :label-width="formLabelWidth" style="color:#000" >
+        <el-form-item label="*业主姓名:" :label-width="formLabelWidth" style="color:#000" v-if='editForm.isBindUser==1'>
           <el-input autocomplete="off" style="width:43%" v-model="editForm.userName" placeholder="输入业主姓名"></el-input>
         </el-form-item>
-        <el-form-item label="*业主手机号:" :label-width="formLabelWidth" style="color:#000" >
+        <el-form-item label="*业主手机号:" :label-width="formLabelWidth" style="color:#000" v-if='editForm.isBindUser==1'>
           <el-input autocomplete="off" style="width:43%" v-model="editForm.phone" placeholder="输入业主手机号"></el-input>
         </el-form-item>
-        <el-form-item label="*有效期限:" :label-width="formLabelWidth" style="color:#000" >
+        <el-form-item label="*有效期限:" :label-width="formLabelWidth" style="color:#000" v-if='editForm.isBindUser==1'>
           <el-date-picker
             v-model="editTime"
             type="daterange"

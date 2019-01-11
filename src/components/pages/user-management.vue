@@ -507,7 +507,7 @@ export default {
         if (valid) {
           //alert("submit!");
           var datas = this.$refs[formName].model;
-
+          datas.password = encrypt(this.ruleForm.password);
           console.log(datas);
           this.$http
             .post(this.GLOBAL.xgurl + "/park-api/park/sys/saveOrUpdateSysManager", datas, {
@@ -519,7 +519,8 @@ export default {
               console.log(res.data);
 
               //$("#add").hide();
-              this.$message.error(res.data.errorMsg);
+              // this.$message.error(res.data.errorMsg);
+              this.$message.error('用户添加成功');
               this.handleUserList(1);
               this.dialogFormVisible = false;
             })
