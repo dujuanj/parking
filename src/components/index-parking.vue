@@ -88,11 +88,13 @@ export default {
            {menuId:'4',munuName:'系统设置',menuLevel:[
               {menuUrl: "/repair-management", menuName: "故障报修管理", menu: Array(5), parentId: "200"},
               {menuUrl: "/group-management", menuName: "节点组管理", menu: Array(5), parentId: "200"},
+              {menuUrl: "/garage-feedback", menuName: "车场信息反馈管理", menu: Array(5), parentId: "200"},
               {menuUrl: "/banner-management", menuName: "广告管理", menu: Array(5), parentId: "200"},
               {menuUrl: "/help-management", menuName: "APP使用帮助管理", menu: Array(5), parentId: "200"},
               {menuUrl: "/feedback-management", menuName: "意见反馈管理", menu: Array(5), parentId: "200"},
               {menuUrl: "/version-management", menuName: "版本管理", menu: Array(5), parentId: "200"},
               {menuUrl: "/notice-management", menuName: "系统通知", menu: Array(5), parentId: "200"},//系统通知
+              {menuUrl: "/parking-timeout", menuName: "停车超时设置", menu: Array(5), parentId: "200"}, //停车超时设置
           ]},
            {menuId:'4',munuName:'报表统计',menuLevel:[
               {menuUrl: "/report-management", menuName: "报表统计信息", menu: Array(5), parentId: "200"},

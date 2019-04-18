@@ -76,7 +76,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+          //alert("submit!");
            //this.$router.push("/index-parking");//接口通，删除
           var datas = this.$refs[formName].model;
           console.log(datas);
@@ -93,8 +93,8 @@ export default {
             headers: {
               "Content-Type": "application/json;charset=UTF-8"
             },
-             withCredentials:true,
-             crossDomain: true,
+            //  withCredentials:true,
+            //  crossDomain: true,
            
           }
         )
@@ -160,6 +160,7 @@ export default {
     },
     //获取验证码
     getVerify(event) {
+      //this.randomcode --验证码路径
       // this.seesioncode=sessionStorage.getItem('RANDOMVALIDATECODEKEY');
       // console.log(this.seesioncode);
       // console.log(
@@ -168,11 +169,32 @@ export default {
       //     'http://192.168.11.22:47073/authCode/checkValidateCode'+
       //     Math.random()
       // );
-      this.randomcode =
-        this.GLOBAL.xgurl +
-        "/park-api/park/authCode/getValidateCode?" +
-        //  '/authCode/getValidateCode?'+
-        Math.random();
+      // this.randomcode =
+      //   this.GLOBAL.xgurl +
+      //   "/park-api/park/authCode/getValidateCode?" +
+      //   //  '/authCode/getValidateCode?'+
+      //   Math.random();
+       this.$http
+        .get(
+          this.GLOBAL.xgurl + "/park-api/park/authCode/getValidateCode",
+
+          {
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8"
+            },
+             withCredentials:true,
+             crossDomain: true,
+          }
+        )
+        .then(res => {
+          console.log(res);
+        
+          this.randomcode = "data:image/jpg;base64,"+res.data.dataArray.src
+        })
+        .catch(res => {
+          console.log("err");
+        });
+
     },
     //验证码校验方法
     checkCode() {

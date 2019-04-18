@@ -18,7 +18,7 @@
            <option value="HISS AIR APP">HISS AIR APP</option>
         </select>
         <select v-model="noticeType" @change="handleUserList(1)" class="myselect">
-          <option value>选择绑通知类型</option>
+          <option value>选择通知类型</option>
           <option value="新品推荐">新品推荐</option>
           <option value="优惠活动">优惠活动</option>
           <option value="行业资讯">行业资讯</option>
@@ -321,7 +321,7 @@ export default {
         if (valid) {
           //alert("submit!");
           var datas = this.$refs[formName].model;
-
+           datas.publisher=sessionStorage.getItem("username");
           console.log(datas);
           this.$http
             .post(this.GLOBAL.xgurl + "/park-api/park/system/publish", datas, {

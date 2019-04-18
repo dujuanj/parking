@@ -508,6 +508,7 @@ export default {
           //alert("submit!");
           var datas = this.$refs[formName].model;
           datas.password = encrypt(this.ruleForm.password);
+          datas.createUser=sessionStorage.getItem("managerId"),
           console.log(datas);
           this.$http
             .post(this.GLOBAL.xgurl + "/park-api/park/sys/saveOrUpdateSysManager", datas, {

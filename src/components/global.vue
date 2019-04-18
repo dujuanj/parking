@@ -8,7 +8,7 @@
 <script>
 
 const serverSrc='www.baidu.com';
-const xgurl='http://124.193.187.94:57073';
+const xgurl='http://192.168.10.30:57073';
 //const xgurl='http://116.196.90.98:57073';
 const token='12345678';
 const hasEnter=false;

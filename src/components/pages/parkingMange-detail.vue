@@ -48,12 +48,20 @@
               <label for="totalNum" class="control-label">详细地址:</label>
               <span>{{detailDatas.street}}</span> 
             </div>
+             <div class="form-inline">
+              <label for="totalNum" class="control-label">效果图:</label>
+              <img :src='detailDatas.rendering' style='width: 150px; height: 120px;'/> 
+            </div>
+             <div class="form-inline">
+              <label for="totalNum" class="control-label">楼层:</label>
+              <span>{{detailDatas.floor}}</span>
+            </div>
             <div class="form-inline">
               <label for="place-image" class="control-label">平面图:</label>
-              <span style="display: inline-block; width: 150px; height: 120px; margin-right: 10px;">
-                <img
-                  :src="detailDatas.picture"
-                  style="width: 100%; height: 100%;"
+              <span style="display: inline-block; width: 150px; height: 120px; margin-right: 10px;vertical-align:middle" v-for='item in detailPics'>
+                <img 
+                  :src="item"
+                  style="width: 100%; height: 100%;float:left"
                 >
               </span>
             </div>
@@ -110,7 +118,7 @@
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">价格:</label>
-              <span>{{detailDatas.chargeGroup.chargeManagement[0].money}}</span> 元
+              <span>{{detailDatas.chargeGroup.chargeManagement[1].money}}</span> 元
             </div> 
           </div>
         </div>
@@ -167,6 +175,54 @@
           <el-input v-model="editForm.street"></el-input>
         </el-form-item>
         <!-- 图片上传 -->
+         <!-- 效果图 -->
+         <el-form-item label="效果图:" :label-width="formLabelWidth" style="color:#000">
+          <el-upload
+            action
+            accept="image/*"
+            :multiple="true"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            name="uploadFile"
+            :file-list="rendering"
+            :http-request="httpRequest2"
+            :show-file-list="true"
+            limit=1
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt>
+          </el-dialog>
+          <span style='font-size:12px'>支持jpg、png格式图片，不得大于2M</span> 
+        </el-form-item> 
+          <!-- 楼层 -->
+        
+          <el-form-item
+         
+          :label-width="formLabelWidth" style="color:#000"
+         
+          :label="'楼层'"
+          
+          :rules="{
+           required: true, message: '域名不能为空', trigger: 'blur'
+          }"
+       >
+        <div  v-for="(domain, index) in dynamicValidateForm.domains"
+           :key="domain.key"
+          :prop="'domains.' + index + '.value'" style='float:left'>
+           <el-input v-model="domain.value" style='width:120px;' 
+          
+          ></el-input>
+          <i class="el-icon-close" title="删除楼层" @click.prevent="removeDomain(domain)"   style='position: relative;top: 0;left: -23px;cursor:pointer;'></i>
+        </div>
+         
+         
+      </el-form-item> 
+        <el-form-item :label-width="formLabelWidth">
+           <el-button @click="addDomain">新增楼层</el-button>
+        </el-form-item> 
+        <!-- 平面图 -->
         <el-form-item label="平面图:" :label-width="formLabelWidth" style="color:#000" prop="picture">
           <el-upload
             action
@@ -176,7 +232,7 @@
             
            
             name="uploadFile"
-            
+            :on-remove="handleRemove"
             :file-list="picList"
             :http-request="httpRequest"
             :show-file-list=true
@@ -195,7 +251,7 @@
             :picker-options="{
       start: '00:00',
       step: '00:15',
-      end: '24:00'
+      end: '23:59'
     }"
           ></el-time-select>
           <el-time-select
@@ -204,7 +260,7 @@
             :picker-options="{
       start: '00:00',
       step: '00:15',
-      end: '24:00',
+      end: '23:59',
       minTime: startTime
     }"
           ></el-time-select>
@@ -329,6 +385,12 @@ export default {
   
   data() {
     return {
+        dynamicValidateForm: {
+          domains: [{
+            value: '' //楼层数据
+          }],
+         
+        },
       dialogFormeditVisible: false,
       formLabelWidth: "100px",
       //上传图片
@@ -337,6 +399,7 @@ export default {
       imgurlbase: "", //图片base64位码
       //回显的图片
       picList: [],
+      detailPics:'',//详情回显的多张或单张图片
       dialogVisible: false,
       startTime: "",
       endTime: "",
@@ -353,7 +416,7 @@ export default {
       districtDatas: "",
       cityArr: [],
       districtArr: [],
-      
+      rendering:[],//加显效果图
     };
   },
   methods: {
@@ -402,6 +465,8 @@ export default {
     },
     getDetailData(){
        this.picList=[]; //回显的图片
+       this.rendering=[];
+       this.dynamicValidateForm.domains=[];
        this.$http
         .post(
           this.GLOBAL.xgurl + "/park-api/park/parkingLot/parkingLotInfo",
@@ -419,10 +484,40 @@ export default {
         
           this.detailDatas=res.data.dataArray;
           this.editForm=res.data.dataArray;
-          var obj=new Object();
-          obj.url=res.data.dataArray.picture;
-          this.picList.push(obj);;
-          console.log(this.picList);
+          //多张平面图详情显示使用
+          this.detailPics=this.detailDatas.picture;
+          if(this.detailPics.length==1){
+            this.detailPics=Array(this.detailPics);
+          }else{
+            this.detailPics=this.detailPics.split(',')
+          }
+          
+          // 多张平面图 --编辑时用
+          var showPics=res.data.dataArray.picture; //回显的图片
+          showPics=showPics.split(',');
+          console.log(showPics);
+          for(var i=0;i<showPics.length;i++){
+            var obj=new Object();
+            obj.url=showPics[i];
+            this.picList.push(obj);
+          }
+          console.log(this.picList);//平面图回显[{url:''},{url:''},...]
+
+          // 回显效果图
+          var obj2=new Object();
+          obj2.url=res.data.dataArray.rendering;
+
+          this.rendering.push(obj2)//回显的效果图
+          console.log(this.rendering);
+           //回显的楼层
+          var floors=(res.data.dataArray.floor).split(',');
+          console.log(floors);
+          for(var i=0;i<floors.length;i++){
+            var obj=new Object();
+            obj.value=floors[i];
+            this.dynamicValidateForm.domains.push(obj);
+          }
+          console.log(this.dynamicValidateForm.domains); 
           this.prov=res.data.dataArray.province;
           this.dcity=res.data.dataArray.city;
           this.ddistrict=res.data.dataArray.area;
@@ -464,6 +559,50 @@ export default {
       
       }
     },
+    //效果图上传
+     httpRequest2(file) {
+      //alert(999);
+
+      console.log(file.file);
+
+      var reader = new FileReader();
+      reader.readAsDataURL(file.file);
+
+      reader.onload = e => {
+        var imgurlbase = e.target.result.split(",");
+        imgurlbase.shift();
+        imgurlbase = imgurlbase.toString();
+        console.log(imgurlbase);
+        this.imgAdd2(imgurlbase);
+      };
+    },
+     //效果图
+    imgAdd2(imgUrl) {
+      this.imgurlbase = imgUrl;
+
+      var b;
+      $.ajax({
+        type: "POST",
+        url: this.GLOBAL.imgUrl + "/air-api/space/upPic",
+        data: { uploadFile: imgUrl },
+        dataType: "json",
+        async: false,
+        success: function(data) {
+          console.log(data);
+          b = data.dataArray;
+
+          return b;
+        },
+        error: function(json) {
+          console.log(json);
+        }
+      });
+
+      console.log(b);
+      // this.ruleForm.rendering = b;
+      this.editForm.rendering = b;
+      // this.rendering=b; //路径
+    },
     //图片上传
      imgAdd(imgUrl) {
       this.imgurlbase = imgUrl;
@@ -488,7 +627,7 @@ export default {
 
       console.log(a);
      
-      this.editForm.picture=a;
+      this.picList.push(a);
     
     },
      //图片上传转流
@@ -508,12 +647,36 @@ export default {
         this.imgAdd(imgurlbase);
       };
     },
+      handleRemove(file, picList) {
+        console.log(file, picList);
+        this.picList=picList;
+        console.log(this.picList);
+      },
      //编辑保存
     saveEdit(){
-        
+         var picLen=this.picList;
+      var newarr=[];
+      for(var i=0;i<picLen.length;i++){
+        if(picLen[i].url==undefined){
+          newarr.push(picLen[i])
+        }else{
+          newarr.push(picLen[i].url)
+        }
+      }
+     this.editForm.picture=String(newarr);
+      console.log(this.picList);
+      console.log(this.editForm.picture);
         console.log(this.editForm);
         //this.editForm.picture=this.picture;
-        this.editForm.createUser=1;
+          var floor=this.dynamicValidateForm.domains;//楼层[{value: "1"}, {value: "2", key: 1550477395420}]
+            var arr=[];
+            for(var i=0;i<floor.length;i++){
+                arr.push(floor[i].value);
+            };
+            console.log(arr);
+            arr=arr.join(',');
+            this.editForm.floor=arr; //楼层 1,2格式
+        //this.editForm.createUser=1;
          this.editForm.province=this.prov;
         this.editForm.city=this.dcity;
         this.editForm.area=this.ddistrict;
@@ -541,6 +704,18 @@ export default {
           console.log("err");
         });
     },
+     addDomain() {
+        this.dynamicValidateForm.domains.push({
+          value: '',
+          key: Date.now()
+        });
+      },
+      removeDomain(item) {
+        var index = this.dynamicValidateForm.domains.indexOf(item)
+        if (index !== -1) {
+          this.dynamicValidateForm.domains.splice(index, 1)
+        }
+      },
    
   },
   created(){
@@ -573,6 +748,10 @@ export default {
 };
 </script>
 <style scoped>
+input[data-v-38258bb3], .el-date-editor.el-input__inner[data-v-38258bb3] {
+    width: 173px;
+    margin-right: 12px;
+}
 .el-row {
   text-align: left;
   margin-left: 18px;

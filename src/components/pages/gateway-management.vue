@@ -93,7 +93,7 @@
 
               <td>{{item.parkingLotName}}</td>
               <td>{{item.macName}}</td>
-              <td style="width:15%">{{item.license}}</td>
+              <td > <div  :title="item.license" style="width:130px;overflow: hidden;text-overflow:ellipsis;white-space:nowrap;">{{item.license}}</div> </td>
               <td>{{item.exprieDate}}</td>
               <td>{{item.isOnline==1?"在线":item.isOnline==0?"离线":''}}</td>
               <td>{{item.nodeNum}}</td>
@@ -418,7 +418,7 @@ export default {
         if (valid) {
           //alert("submit!");
           var datas = this.$refs[formName].model;
-
+          datas.createUser=sessionStorage.getItem("managerId"),
           console.log(datas);
           this.$http
             .post(this.GLOBAL.xgurl + "/park-api/park/gateway/addGateway", datas, {
@@ -484,7 +484,7 @@ export default {
        console.log(file);
        var formdata = new FormData();//创建一个表单
        formdata.append("fileUrl",file);
-       formdata.append("className",'TGateway'); 
+       formdata.append("className",'Gateway'); 
      let _this = this;
       //调用接口传文件
            _this.$http
@@ -568,9 +568,7 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-    },
+  
 
     //详情
     getDescribe(event) {

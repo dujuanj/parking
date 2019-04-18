@@ -59,7 +59,7 @@
           </div>
         </div>
         <!-- 共享信息 -->
-        <div id="space_details" class="panel panel-default"  v-if='detailDatas.isBindUser==1'>
+        <div id="space_details" class="panel panel-default"  v-if='detailDatas.shareType==1'>
           <div class="panel-heading">共享信息</div>
           <div class="panel-body">
             <div class="form-inline" >
@@ -133,7 +133,7 @@
           <div class="panel-body">
             <div class="form-inline">
               <label for="place-name" class="control-label">创建人:</label>
-              <span>{{detailDatas.createUser}}</span>
+              <span>{{detailDatas.createUserName}}</span>
             </div>
             <div class="form-inline">
               <label for="area" class="control-label">账号:</label>
@@ -154,9 +154,16 @@
       <p style="width:100%;color: #67c23a;margin-top: -25px;margin-bottom: 17px">填写车位信息>>></p>
       <el-form :model="editForm"  >
         <el-form-item label="*所属停车场:" :label-width="formLabelWidth" style="color:#000" >
-          <select @change="handleUserList(1)" class="myselect" v-model="editForm.parkingLotId">
+          <select @change="getId($event)" class="myselect" v-model="editForm.parkingLotId">
             <option value>选择所属停车场(全部)</option>
             <option :value="item.id" v-for="item in queryParkingLotdata">{{item.name}}</option>
+          </select>
+        </el-form-item>
+         <!-- 所属楼层 -->
+        <el-form-item label="所属楼层:" :label-width="formLabelWidth" style="color:#000" >
+          <select class="myselect" v-model="editForm.floor">
+            <option value>选择所属楼层(全部)</option>
+            <option :value="item" v-for="item in floorData">{{item}}</option>
           </select>
         </el-form-item>
         <el-form-item label="*车位编号:" :label-width="formLabelWidth" style="color:#000" >
@@ -229,7 +236,9 @@ export default {
       dialogVisible: false,
       startTime: "",
       endTime: "",
-     
+      id:'',
+      floor:'',
+      floorData:'',
       detailId: "",
       //详情数据
       detailDatas: "",
@@ -264,6 +273,38 @@ export default {
           console.log(this.userParkingSpace);
           this.detailDatas = res.data.dataArray;
           this.editForm=res.data.dataArray;
+         
+        })
+        .catch(res => {
+          console.log("err");
+        });
+    },
+     getId(event){
+        this.id=event.currentTarget.value;
+        alert(this.id);
+        this.getFloor(this.id);
+    },
+    //查询楼层
+    getFloor(myid){
+       
+       this.$http
+        .post(
+          this.GLOBAL.xgurl + "/park-api/park/parkingLot/getFloor",
+          {id:myid},
+          {
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8"
+            }
+          }
+        )
+        .then(res => {
+          console.log(res.data.dataArray);
+          this.floorData = (res.data.dataArray);
+          if(res.data.dataArray.indexOf(',') ==-1){
+            this.floorData=Array(res.data.dataArray)
+          }else{
+            this.floorData=(res.data.dataArray).split(',')
+          }
         })
         .catch(res => {
           console.log("err");
@@ -373,7 +414,9 @@ export default {
           }
         )
         .then(res => {
+           this.getFloor(res.data.dataArray.parkingLotId);
           console.log(res.data.dataArray);
+         
           this.editForm = res.data.dataArray;
           this.editTime=[];
           if(this.editForm.userParkingSpace==null){

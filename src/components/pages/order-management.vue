@@ -27,7 +27,7 @@
            <option value="6">待处理</option>
             <option value="7">取消中</option>
           
-           <option value="">已退款</option>
+           <!-- <option value="">已退款</option> -->
         </select>
        
         
@@ -88,8 +88,9 @@
               <td>{{item.userPhone}}</td>
              
 
-              <td>{{(item.createTime)|formatTime('YMD') }}</td>
-              <td>{{item.settlementTime|formatTime('YMD') }}</td>
+              <td>{{item.createTime==null ?"--" : (item.createTime)|formatTime('YMD') }}</td>
+              <td v-if='item.settlementTime==null '>--</td>
+              <td v-else>{{item.settlementTime|formatTime('YMD')}}</td>
               <td>{{(item.totalFee).toFixed(2)}}</td>
              
               <td>{{item.orderStatus==1?"已预定":item.orderStatus==2?"停车中":item.orderStatus==3?"待支付":item.orderStatus==4?"已结束":item.orderStatus==5?"已取消":item.orderStatus==6?"待处理":item.orderStatus==7?"取消中":""}}</td>
@@ -211,7 +212,7 @@ export default {
             orderStatus:this.orderStatus,
             startTime:this.startTime,
             endTime:this.endTime,
-            // id:this.id
+            id:this.id
           },
           {
             headers: {
@@ -232,7 +233,7 @@ export default {
     //重置
     reset() {
         this.id='',
-        this.orderStatus='',
+        this.orderStatus=0,
         this.startTime='',
         this.parkingSpaceLotId='',
         this.endTime='',

@@ -114,11 +114,19 @@
       <p style="width:100%;color: #67c23a;margin-top: -25px;margin-bottom: 17px">填写车位信息>>></p>
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
         <el-form-item label="所属停车场:" :label-width="formLabelWidth" style="color:#000" prop="parkingLotId">
-          <select @change="handleUserList(1)" class="myselect" v-model="ruleForm.parkingLotId">
+          <select @change="getId($event)" class="myselect" v-model="ruleForm.parkingLotId">
             <option value>选择所属停车场(全部)</option>
             <option :value="item.id" v-for="item in queryParkingLotdata">{{item.name}}</option>
           </select>
         </el-form-item>
+        <!-- 所属楼层 -->
+        <el-form-item label="所属楼层:" :label-width="formLabelWidth" style="color:#000" prop="parkingLotId">
+          <select class="myselect" v-model="ruleForm.floor">
+            <option value>选择所属楼层(全部)</option>
+            <option :value="item" v-for="item in floorData">{{item}}</option>
+          </select>
+        </el-form-item>
+        <!-- 车位编号 -->
         <el-form-item label="车位编号:" :label-width="formLabelWidth" style="color:#000" prop="number">
           <el-input autocomplete="off" style="width:43%" v-model="ruleForm.number" placeholder="输入车位编号"></el-input>
           <br>
@@ -180,9 +188,16 @@
       <p style="width:100%;color: #67c23a;margin-top: -25px;margin-bottom: 17px">填写车位信息>>></p>
       <el-form :model="editForm"  :rules="rules">
         <el-form-item label="*所属停车场:" :label-width="formLabelWidth" style="color:#000" >
-          <select @change="handleUserList(1)" class="myselect" v-model="editForm.parkingLotId">
+          <select @change="getId($event)" class="myselect" v-model="editForm.parkingLotId">
             <option value>选择所属停车场(全部)</option>
             <option :value="item.id" v-for="item in queryParkingLotdata">{{item.name}}</option>
+          </select>
+        </el-form-item>
+         <!-- 所属楼层 -->
+        <el-form-item label="所属楼层:" :label-width="formLabelWidth" style="color:#000" >
+          <select class="myselect" v-model="editForm.floor">
+            <option value>选择所属楼层(全部)</option>
+            <option :value="item" v-for="item in floorData">{{item}}</option>
           </select>
         </el-form-item>
         <el-form-item label="*车位编号:" :label-width="formLabelWidth" style="color:#000" >
@@ -274,8 +289,13 @@ export default {
       tableData: "",
       //查询所有停车场
       queryParkingLotdata: "",
+      //查询楼层
+      floor:'',
+      floorData:'',
+      id:'',//停车场
       //添加数据
       ruleForm: {
+        floor:'',
         parkingLotId: "",
         number: "",
         isChargingPile: "",
@@ -292,6 +312,7 @@ export default {
       },
       //编辑数据
        editForm: {
+         floor:'',
         parkingLotId: "",
         number: "",
         isChargingPile: "",
@@ -431,6 +452,37 @@ export default {
           console.log("err");
         });
     },
+    getId(event){
+        this.id=event.currentTarget.value;
+        alert(this.id);
+        this.getFloor(this.id);
+    },
+    //查询楼层
+    getFloor(myid){
+       
+       this.$http
+        .post(
+          this.GLOBAL.xgurl + "/park-api/park/parkingLot/getFloor",
+          {id:myid},
+          {
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8"
+            }
+          }
+        )
+        .then(res => {
+          console.log(res.data.dataArray);
+          this.floorData = (res.data.dataArray);
+          if(res.data.dataArray.indexOf(',') ==-1){
+            this.floorData=Array(res.data.dataArray)
+          }else{
+            this.floorData=(res.data.dataArray).split(',')
+          }
+        })
+        .catch(res => {
+          console.log("err");
+        });
+    },
     //重置
     reset() {
       (this.isBindUser = ""),
@@ -449,7 +501,7 @@ export default {
         if (valid) {
           //alert("submit!");
           var datas = this.$refs[formName].model;
-          datas.createUser = 1;
+          datas.createUser = sessionStorage.getItem("managerId");
           console.log(this.time);
           console.log(datas);
           datas.userParkingSpace.startTime=new Date(this.time[0]).getTime() ;
@@ -468,7 +520,7 @@ export default {
               console.log(res.data);
 
               //$("#add").hide();
-              this.$message.error(res.data.errorMsg);
+              this.$message.success(res.data.errorMsg);
               this.handleUserList(1);
               this.dialogFormVisible = false;
             })
@@ -501,15 +553,20 @@ export default {
         )
         .then(res => {
           console.log(res.data.dataArray);
+          this.getFloor(res.data.dataArray.parkingLotId);
           this.editForm = res.data.dataArray;
           this.editTime=[];
           this.editTime.push(new Date(res.data.dataArray.userParkingSpace.startTime));
           this.editTime.push(new Date(res.data.dataArray.userParkingSpace.endTime));
+          console.log(res.data.dataArray.parkingLotId);
+         
           
         })
         .catch(res => {
           console.log("err");
         });
+       
+        
     },
      //编辑保存
     saveEdit(){
@@ -610,6 +667,7 @@ export default {
   created() {
     this.handleUserList(this.currentPage);
     this.queryParkingSpace();
+   
   }
 };
 </script>

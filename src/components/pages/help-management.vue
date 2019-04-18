@@ -302,7 +302,7 @@ export default {
         if (valid) {
           //alert("submit!");
           var datas = this.$refs[formName].model;
-
+          datas.createUser=sessionStorage.getItem("managerId");
           console.log(datas);
           this.$http
             .post(

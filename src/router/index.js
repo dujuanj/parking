@@ -26,7 +26,11 @@ import notice from '@/components/pages/notice-management'  //系统通知
 import report from '@/components/pages/report-management'  //报表统计
 import order from '@/components/pages/order-management' //订单管理
 import orderDetail from '@/components/pages/order-detail'  //订单详情
-import repair from '@/components/pages/repair-management'  //故障报修管理 
+import repair from '@/components/pages/repair-management'  //故障报修管理
+import repairDetail from '@/components/pages/repair-detail'  //故障报修详情
+import timeout from '@/components/pages/parking-timeout'  //停车超时
+import garage from '@/components/pages/garage-feedback' //车场信息反馈管理
+import garageDetail from '@/components/pages/garage-detail' //车场信息反馈详情
 
 import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data'
 
@@ -154,6 +158,11 @@ export default new Router({
           component:notice
         },
         {
+          path:'/parking-timeout', //停车超时
+          name:'timeout',
+          component:timeout
+        },
+        {
           path:'/report-management', //报表统计
           name:'report',
           component:report
@@ -173,6 +182,22 @@ export default new Router({
           name:'repair',
           component:repair
         },
+        {
+          path:'/repair-detail', //故障报修详情
+          name:'repairDetail',
+          component:repairDetail
+        },
+        {
+          path:'/garage-feedback', //车场信息反馈管理
+          name:'garage',
+          component:garage
+        },
+        {
+          path:'/garage-detail', //车场信息反馈详情
+          name:'garageDetail',
+          component:garageDetail
+        },
+        
       ]
     },
   ],

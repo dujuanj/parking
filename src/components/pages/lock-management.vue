@@ -17,21 +17,25 @@
           <option value>选择绑定的停车场(全部)</option>
           <option :value="item.id" v-for="item in queryParkingLotdata">{{item.name}}</option>
         </select>
-        <select v-model="isBindParkingLot" @change="handleUserList(1)" class="myselect">
-          <option value>选择绑定状态</option>
+        <select v-model="isBindParkingSpace" @change="handleUserList(1)" class="myselect">
+          <option value=''>选择绑定状态</option>
           <option value="1">已绑定</option>
           <option value="0">未绑定</option>
         </select>
-        <select v-model="isBindParkingLot" @change="handleUserList(1)" class="myselect">
+        <!-- <select v-model="isBindParkingLot" @change="handleUserList(1)" class="myselect">
           <option value>选择是否连接网关(全部)</option>
           <option value="1">已联接</option>
           <option value="0">未联接</option>
-        </select>
-         <select v-model="isBindParkingLot" @change="handleUserList(1)" class="myselect">
+        </select> -->
+         <select v-model="status" @change="handleUserList(1)" class="myselect">
           <option value>选择车锁状态</option>
-          <option value="1">直立</option>
-          <option value="0">水平</option>
-           <option value="0">斜立</option>
+          <option value="0">落杆水平</option>
+          <option value="1">抬杆中</option>
+          <option value="2">抬杆未到位</option>
+          <option value="3">抬杆直立</option>
+          <option value="4">落杆中</option>
+          <option value="5">落杆未到位</option>
+        
         </select>
         <select
           v-model="isOnline"
@@ -105,14 +109,14 @@
               <td style="width:5%">{{(currentPage-1)*10+(index+1)}}</td>
               <td>{{item.name}}</td>
               <td>{{item.devEui}}</td>
-              <td>{{item.isBindParkingSpace==1?"已绑定":item.isBindParkingLot==0?"未绑定":''}}</td>
+              <td>{{item.isBindParkingSpace==1?"已绑定":item.isBindParkingSpace==0?"未绑定":''}}</td>
 
               <td>{{item.parkingLotName}}</td>
               <td>{{item.parkingSpaceNumber}}</td>
               <td>{{item.devAddress}}</td>
               <td>{{item.exprieDate}}</td>
               <td>{{item.appEui}}</td>
-              <td></td>
+              <td>{{item.status}}</td>
               <td>{{item.isOnline==1?"在线":item.isOnline==0?"离线":''}}</td>
               <td>{{item.power}}</td>
              
@@ -190,7 +194,7 @@
           style="color:#000"
           prop="parkingLotId"
         >
-          <select @change="handleUserList(1)" class="myselect" v-model="ruleForm.classc">
+          <select @change="handleUserList(1)" class="myselect" v-model="ruleForm.isClassc">
             <option value="false">否</option>
             <option value="true">是</option>
             
@@ -202,7 +206,7 @@
           style="color:#000"
           prop="parkingLotId"
         >
-          <select @change="handleUserList(1)" class="myselect" v-model="ruleForm.relaxFCnt">
+          <select @change="handleUserList(1)" class="myselect" v-model="ruleForm.relaxFcnt">
            
             <option value="true">是</option>
             <option value="false">否</option>
@@ -241,12 +245,12 @@
           <el-input autocomplete="off" v-model="ruleForm.longitude"></el-input>
         </el-form-item>
         <el-form-item
-          label="Rx1drOffset:"
+          label="rx1dr:"
           :label-width="formLabelWidth"
           style="color:#000"
           prop="isBindParkingLot"
         >
-          <el-input autocomplete="off" v-model="ruleForm.Rx1drOffset"></el-input>
+          <el-input autocomplete="off" v-model="ruleForm.rx1dr"></el-input>
         </el-form-item>
          <el-form-item
           label="Rx2DR:"
@@ -380,7 +384,7 @@
           style="color:#000"
           prop="parkingLotId"
         >
-          <select @change="handleUserList(1)" class="myselect" v-model="editForm.classc">
+          <select @change="handleUserList(1)" class="myselect" v-model="editForm.isClassc">
             <option value>选择是否为*CLASSC模式</option>
             <option value="true">是</option>
             <option value="false">否</option>
@@ -392,7 +396,7 @@
           style="color:#000"
           prop="parkingLotId"
         >
-          <select @change="handleUserList(1)" class="myselect" v-model="editForm.relaxFCnt">
+          <select @change="handleUserList(1)" class="myselect" v-model="editForm.relaxFcnt">
             
             <option value="true">是</option>
             <option value="false">否</option>
@@ -431,12 +435,12 @@
           <el-input autocomplete="off" v-model="editForm.longitude"></el-input>
         </el-form-item>
         <el-form-item
-          label="Rx1drOffset:"
+          label="rx1dr:"
           :label-width="formLabelWidth"
           style="color:#000"
           prop="isBindParkingLot"
         >
-          <el-input autocomplete="off" v-model="editForm.Rx1drOffset"></el-input>
+          <el-input autocomplete="off" v-model="editForm.rx1dr"></el-input>
         </el-form-item>
          <el-form-item
           label="Rx2DR:"
@@ -528,10 +532,11 @@ export default {
     return {
       //筛选
       parkingLotId: "",
-      isBindParkingLot: "",
+      isBindParkingSpace:'',
       power:'',
       isOnline: "",
       name: "",
+      status:'',
       //查询所有停车场
       queryParkingLotdata: "",
       //所有组
@@ -559,15 +564,15 @@ export default {
         appEui: "",
         appKey: "",
         authCode: "",
-        classc: "false",
+        isClassc: "false",
         latitude:'string', //经度
         longitude:'string', //纬度
-        Rx1drOffset:'0',
+        rx1dr:'0',
         rx2dr:'0',
         rxdelay:'0',
         rxwindows:'rx1',
         description:'string',
-        relaxFCnt:'false',
+        relaxFcnt:'false',
         adrInterval:'0',
         installationMargin:'0',
         isBindParkingSpace:'',
@@ -583,7 +588,7 @@ export default {
         appEui: "",
         appKey: "",
         authCode: "",
-        classc: "",
+        isClassc: "",
         latitude:'',
         longitude:'',
         rx1dr:'',
@@ -591,7 +596,7 @@ export default {
         rxdelay:'',
         rxwindows:'',
         description:'',
-        relaxFCnt:'',
+        relaxFcnt:'',
         adrInterval:'',
         installationMargin:'',
         isBindParkingSpace:'',
@@ -654,8 +659,8 @@ export default {
             pageNumber: currentpage,
             pageSize: this.pagesize,
             parkingLotId: this.parkingLotId,
-            isBindParkingLot: this.isBindParkingLot,
-            
+            isBindParkingSpace: this.isBindParkingSpace,
+            status:this.status,
             power:this.power,
             isOnline: this.isOnline,
             name: this.name,
@@ -679,20 +684,21 @@ export default {
     },
     //重置
     reset() {
-      (this.parkingLotId = ""),
-        (this.isBindParkingLot = ""),
-        (this.effectiveRange = ""),
-        (this.isOnline = ""),
-        (this.name = ""),
+        this.parkingLotId = "",
+        this.isBindParkingSpace = "",
+        this.effectiveRange = "",
+        this.isOnline = "",
+        this.name = "",
+        this.status='',s
         this.handleUserList(1);
     },
     //添加网关
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          //alert("submit!");
+          alert("submit!");
           var datas = this.$refs[formName].model;
-
+          datas.createUser=sessionStorage.getItem("managerId"),
           console.log(datas);
           this.$http
             .post(this.GLOBAL.xgurl + "/park-api/park/parkingLock/addParkingLock", datas, {
@@ -702,11 +708,11 @@ export default {
             })
             .then(res => {
               console.log(res.data);
-
+               this.dialogFormVisible = false;
               //$("#add").hide();
-              this.$message.error(res.data.errorMsg);
+              this.$message.success(res.data.errorMsg);
               this.handleUserList(1);
-              this.dialogFormVisible = false;
+             
             })
             .catch(res => {
               console.log("err");
@@ -758,7 +764,7 @@ export default {
     console.log(file);
        var formdata = new FormData();//创建一个表单
        formdata.append("fileUrl",file);
-       formdata.append("className",'TGateway'); 
+       formdata.append("className",'Node'); 
      let _this = this;
       //调用接口传文件
            _this.$http
@@ -847,11 +853,13 @@ export default {
         )
         .then(res => {
           console.log(res.data);
+          this.dialogFormeditVisible=false;
            this.$message({
             type: "success",
             message: res.data.errorMsg,
            
           });
+          this.handleUserList(1);
         })
         .catch(res => {
           console.log("err");

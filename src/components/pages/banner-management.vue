@@ -58,7 +58,7 @@
               <th>预览</th>
               <th>开始日期</th>
               <th>结束日期</th>
-              <!-- <th>广告状态</th> -->
+              <th>广告状态</th>
               <th>启用状态</th>
               <th>跳转链接</th>
               <th>广告描述</th>
@@ -82,7 +82,7 @@
               <td>{{item.startTime | formatTime('YMDHMS')}}</td>
               <td style="width:15%">{{item.endTime | formatTime('YMDHMS')}}</td>
               <!-- 广告状态 -->
-              
+              <td>{{item.enable==0?"禁用":item.enable==1?"启用":''}}</td>
               <td>{{item.status==1?"关闭":item.status==0?"启用":item.status==2?"已过期":''}}</td>
               <td>{{item.jumpUrl}}</td>
               <td>{{item.content}}</td>
@@ -530,6 +530,7 @@ export default {
           var datas = this.$refs[formName].model;
            datas.startTime=new Date(this.editTime[0]).getTime();
            datas.endTime=new Date(this.editTime[1]).getTime();
+           datas.createUser=sessionStorage.getItem("managerId");
           console.log(datas);
           this.$http
             .post(this.GLOBAL.xgurl + "/park-api/park/advertising/addBanner", datas, {
@@ -729,7 +730,7 @@ export default {
     },
      open5(event) {
        var url=$(event.currentTarget).attr('url');
-        this.$alert('<img style="width:390px;height:390px" src="'+url+ '"/>', 'HTML 片段', {
+        this.$alert('<img style="width:390px;height:390px" src="'+url+ '"/>', '广告图片', {
           dangerouslyUseHTMLString: true,
           closeOnClickModal:true
         });

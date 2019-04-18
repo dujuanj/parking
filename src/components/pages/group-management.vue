@@ -48,7 +48,7 @@
               <td>{{item.appEui}}</td>
               <td>{{}}</td>
 
-              <td>{{item.createUser}}</td>
+              <td>{{item.createUserName}}</td>
 
               <td style="width:15%">{{item.createTime|formatTime('YMDHMS')}}</td>
 
@@ -81,14 +81,7 @@
         <el-form-item label="组编号:" :label-width="formLabelWidth" style="color:#000" prop="appEui">
           <el-input autocomplete="off" v-model="ruleForm.appEui"></el-input>
         </el-form-item>
-        <el-form-item
-          label="创建人:"
-          :label-width="formLabelWidth"
-          style="color:#000"
-          prop="createUser"
-        >
-          <el-input autocomplete="off" v-model="ruleForm.createUser"></el-input>
-        </el-form-item>
+        
       </el-form>
       <!-- 提交按扭 -->
       <div slot="footer" class="dialog-footer">
@@ -105,14 +98,7 @@
         <el-form-item label="组编号:" :label-width="formLabelWidth" style="color:#000" prop="appEui">
           <el-input autocomplete="off" v-model="editForm.appEui"></el-input>
         </el-form-item>
-        <el-form-item
-          label="创建人:"
-          :label-width="formLabelWidth"
-          style="color:#000"
-          prop="createUser"
-        >
-          <el-input autocomplete="off" v-model="editForm.createUser"></el-input>
-        </el-form-item>
+        
       </el-form>
       <!-- 提交按扭 -->
       <div slot="footer" class="dialog-footer">
@@ -170,16 +156,15 @@ export default {
       //添加数据
       ruleForm: {
         name: "",
-        appEui: "",
+        appEui: ""
 
-        createUser: ""
       },
       //编辑数据
       editForm: {
         name: "",
         appEui: "",
-        id: "",
-        createUser: ""
+        id: ""
+       
       },
       //添加验证规则
       rules: {
@@ -266,7 +251,7 @@ export default {
             console.log(res.data);
             this.$message({
               type: "success",
-              message: res.data.errorMsg
+              message: '删除成功'
             });
             this.handleUserList(this.currentPage);
           })
@@ -311,7 +296,7 @@ export default {
         if (valid) {
           //alert("submit!");
           var datas = this.$refs[formName].model;
-
+          datas.createUser=sessionStorage.getItem("managerId"),
           console.log(datas);
           this.$http
             .post(
@@ -327,7 +312,7 @@ export default {
               console.log(res.data);
 
               //$("#add").hide();
-              this.$message.error(res.data.errorMsg);
+              this.$message.success(res.data.errorMsg);
               this.handleUserList(1);
               this.dialogFormVisible = false;
             })

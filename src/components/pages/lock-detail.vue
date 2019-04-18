@@ -38,11 +38,11 @@
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">CLASSC模式:</label>
-              <span>{{detailDatas.isClassc==1?"是":detailDatas.isOnline==0?"不是":''}}</span>
+              <span>{{detailDatas.classc==true?"是":detailDatas.classc==false?"不是":''}}</span>
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">忽略重复包:</label>
-              <span>{{detailDatas.relaxFCnt}}</span>
+              <span>{{detailDatas.relaxfcnt}}</span>
             </div>
               <div class="form-inline">
               <label for="totalNum" class="control-label">ADR间隔:</label>
@@ -86,15 +86,15 @@
             </div>
               <div class="form-inline">
               <label for="totalNum" class="control-label">车锁状态:</label>
-              <span>{{}}</span>
+              <span>{{detailDatas.status}}</span>
             </div>
               <div class="form-inline">
               <label for="totalNum" class="control-label">网络状态:</label>
-              <span>{{}}</span>
+              <span>{{detailDatas.isOnline==1?"在线":detailDatas.isOnline==0?"离线":''}}</span>
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">电量状态:</label>
-              <span>{{}}</span>
+              <span>{{detailDatas.power}}</span>
             </div>
           </div>
         </div>
@@ -104,14 +104,14 @@
           <div class="panel-body">
             <div class="form-inline">
               <label for="place-name" class="control-label">绑定状态:</label>
-              <span>{{detailDatas.isBindParkingLot==1?"已绑定":detailDatas.isBindParkingLot==0?"未绑定":''}}</span>
+              <span>{{detailDatas.isBindParkingSpace==1?"已绑定":detailDatas.isBindParkingSpace==0?"未绑定":''}}</span>
             </div>
             <div class="form-inline">
               <label for="area" class="control-label">绑定的停车场:</label>
               <span>{{detailDatas.parkingLotName}}</span>
               <label for="area" class="control-label">绑定的车位:</label>
               <span>{{detailDatas.parkingSpaceNumber}}</span>
-              <span v-if="detailDatas.isBindParkingLot==1">
+              <span v-if="detailDatas.isBindParkingSpace==1">
                 <a
                   href="javascript:;"
                   style="margin-left:20px;"
@@ -291,7 +291,7 @@ export default {
            this.$http
         .post(
           this.GLOBAL.xgurl + "/park-api/park/parkingLock/bindOrUnbindParkingLock",
-          { id: id, parkingLotId: parkingLotId, isBindParkingLot: 0 ,parkingSpaceId:parkingLockId},
+          { id: id, parkingLotId: parkingLotId, isBindParkingSpace: 0 ,parkingSpaceId:parkingLockId},
           {
             headers: {
               "Content-Type": "application/json;charset=UTF-8"
@@ -325,7 +325,7 @@ export default {
        this.$http
         .post(
           this.GLOBAL.xgurl + "/park-api/park/parkingLock/bindOrUnbindParkingLock",
-          { id: this.id, parkingLotId: this.parkingLotId, isBindParkingLot: 1,parkingSpaceId:this.parkingLockId },
+          { id: this.id, parkingLotId: this.parkingLotId, isBindParkingSpace: 1,parkingSpaceId:this.parkingLockId },
           {
             headers: {
               "Content-Type": "application/json;charset=UTF-8"

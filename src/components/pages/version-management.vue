@@ -66,8 +66,8 @@
               <td>
                 <a href="javascript:;" @click="download($event)" :url="item.apkUrl" >下载</a>
               </td>
-
-              <td>{{item.apkUrl}}</td>
+              <!-- apk地址 -->
+              <td> <div  :title="item.apkUrl" style="width:150px;overflow: hidden;text-overflow:ellipsis;white-space:nowrap;"> {{item.apkUrl}}</div></td>
               <td>{{item.type==1?"强制更新":item.type==0?"手动更新":''}}</td>
               <td style="width:15%">{{item.remark}}</td>
               <td>{{item.createUserName}}</td>
@@ -342,7 +342,7 @@ export default {
         if (valid) {
           //alert("submit!");
           var datas = this.$refs[formName].model;
-
+          datas.createUser=sessionStorage.getItem("managerId");
           console.log(datas);
           this.$http
             .post(
@@ -358,7 +358,7 @@ export default {
               console.log(res.data);
 
               //$("#add").hide();
-              this.$message.error(res.data.errorMsg);
+              this.$message.success('添加成功');
               this.handleUserList(1);
               this.dialogFormVisible = false;
             })
@@ -425,7 +425,7 @@ export default {
           console.log(res.data);
           this.$message({
             type: "success",
-            message: res.data.errorMsg
+            message: '上传成功'
           });
           this.ruleForm.apkUrl = res.data.dataArray;
         })
@@ -453,7 +453,7 @@ export default {
           console.log(res.data);
           this.$message({
             type: "success",
-            message: res.data.errorMsg
+            message: '保存功能'
           });
           _this.handleUserList(this.currentPage);
         })

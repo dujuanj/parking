@@ -54,7 +54,7 @@
               <td style="width:15%">{{item.grade}}</td>
               <td>{{item.balance}}元</td>
               <!-- 可用H币 -->
-              <td>{{}}</td>
+              <td>{{item.coin}}</td>
               <!-- 优惠券 -->
               <td>{{}}</td>
               <td :class="{red:item.enable==0}">{{item.enable==1?"启用":item.enable==0?"禁用":''}}</td>

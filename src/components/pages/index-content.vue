@@ -11,24 +11,24 @@
       <div style="height:120px;">
         <ul>
           <li class="count">
-            <span class="posi">2</span>
+            <span class="posi">{{datas.parkingLotNum}}</span>
             <span class="num_style">停车场数量</span>
           </li>
           <li class="count" style="background:#67c23a">
-            <span class="posi">2</span>
+            <span class="posi">{{datas.parkingSpaceNum}}</span>
             <span class="num_style">车位数量</span>
           </li>
           <li class="count" style="background:#909399">
-            <span class="posi">2</span>
+            <span class="posi">{{datas.parkingLockNum}}</span>
             <span class="num_style">设备数量</span>
           </li>
           <li class="count" style="background:#e6a23c">
-            <span class="posi">2</span>
+            <span class="posi">{{datas.appUserNum}}</span>
             <span class="num_style">APP用户数量</span>
           </li>
           <li class="count" style="background:#f56c6c">
-            <span class="posi">2</span>
-            <span class="num_style">预订次数</span>
+            <span class="posi">{{datas.orderNum}}</span>
+            <span class="num_style">下单次数</span>
           </li>
         </ul>
       </div>
@@ -38,26 +38,26 @@
       <div class="stat-container">
         <div class="stat-holder">
           <div class="stat">
-            <span>故障报修80 条</span>
-            立即处理
+            <span>故障报修{{datas.repairNum}}条</span>
+            <router-link :to="{ path: '/repair-management' }">立即处理</router-link> 
           </div>
         </div>
         <div class="stat-holder">
           <div class="stat">
-            <span>异常报警 200条</span>
-            立即处理
+            <span>异常报警 {{datas.policyNum}}条</span>
+            <router-link :to="{ path: '/repair-management' }">立即处理</router-link> 
           </div>
         </div>
         <div class="stat-holder">
           <div class="stat">
-            <span>车场信息反馈</span>
-            立即处理
+            <span>车场信息反馈 {{datas.parkingInfoNum}}条</span>
+            <router-link :to="{ path: '/garage-feedback' }">立即处理</router-link> 
           </div>
         </div>
         <div class="stat-holder">
           <div class="stat">
-            <span>意见反馈</span>
-           立即处理
+            <span>意见反馈 {{datas.feedback}}条</span>
+            <router-link :to="{ path: '/feedback-management' }">立即处理</router-link> 
           </div>
         </div>
       </div>
@@ -79,22 +79,48 @@
 export default {
   name: "home",
   data() {
-    return {};
+    return {
+      datas:'',
+    };
+    
   },
   methods: {
      open4() {
         this.$notify({
           title: '警告',
           dangerouslyUseHTMLString: true,
-          message: '<strong>这是 <i>HTML</i> 片段</strong>',
+          message: '<strong>这是 <i>警告</i> 消息</strong>',
           type: 'warning',
           position: 'bottom-right'
         });
       },
+      // 首页数据
+      getDatas(){
+         this.$http
+        .post(
+          this.GLOBAL.xgurl + "/park-api/park/parkingLot/menudata",
+         
+          {
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8"
+            }
+          }
+        )
+        .then(res => {
+          console.log(res);
+          console.log(res.data.dataArray);
+          this.datas=res.data.dataArray;
+         
+        })
+        .catch(res => {
+          console.log("err");
+        });
+      }
   },
   components: {},
   created(){
-    this.open4()
+    this.open4();
+    this.getDatas();
     // setInterval(this.open4,3500)
   }
 };

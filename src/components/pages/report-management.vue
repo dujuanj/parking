@@ -154,6 +154,7 @@
         </el-col>
       </el-row>
     </div>
+
   </div>
 </template>
 
@@ -162,6 +163,7 @@ export default {
   name: "report",
   data() {
     return {
+    
       parkingLotFormVO:'',
       orderFormVO:'',
       countVO:'',
@@ -170,6 +172,7 @@ export default {
   },
 
   methods: {
+    
     reportDatas: function() {
       this.$http
         .post(

@@ -127,6 +127,52 @@
           <el-input autocomplete="off" v-model="ruleForm.street" placeholder='输入详细地址'></el-input>
         </el-form-item>
         <!-- 图片上传 -->
+        <!-- 效果图 -->
+        <el-form-item label="效果图:" :label-width="formLabelWidth" style="color:#000">
+          <el-upload
+            action
+            accept="image/*"
+            :multiple="true"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            name="uploadFile"
+            :http-request="httpRequest2"
+            limit=1
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt>
+          </el-dialog>
+          <span style='font-size:12px'>支持jpg、png格式图片，不得大于2M</span> 
+        </el-form-item>
+        <!-- 楼层 -->
+           <el-form-item
+         
+          :label-width="formLabelWidth" style="color:#000"
+         
+          :label="'楼层'"
+          
+          :rules="{
+           required: true, message: '域名不能为空', trigger: 'blur'
+          }"
+       >
+        <div  v-for="(domain, index) in dynamicValidateForm.domains"
+           :key="domain.key"
+          :prop="'domains.' + index + '.value'" style='float:left'>
+           <el-input v-model="domain.value" style='width:120px;' 
+          
+          ></el-input>
+          <i class="el-icon-close" title="删除楼层" @click.prevent="removeDomain(domain)"   style='position: relative;top: 0;left: -23px;cursor:pointer;'></i>
+        </div>
+         
+         
+      </el-form-item>  
+         <el-form-item :label-width="formLabelWidth">
+           <el-button @click="addDomain">新增楼层</el-button>
+        </el-form-item>
+        
+        <!-- 平面图 -->
         <el-form-item label="平面图:" :label-width="formLabelWidth" style="color:#000">
           <el-upload
             action
@@ -136,12 +182,14 @@
             :on-preview="handlePictureCardPreview"
             name="uploadFile"
             :http-request="httpRequest"
+            limit=5
           >
             <i class="el-icon-plus"></i>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt>
           </el-dialog>
+           <span style='font-size:12px'>支持jpg、png格式图片，最多可上传5张</span> 
         </el-form-item>
         <!-- 营业时段 -->
         <el-form-item
@@ -157,7 +205,7 @@
             :picker-options="{
       start: '00:00',
       step: '00:15',
-      end: '24:00'
+      end: '23:59'
     }"
           ></el-time-select>
           <el-time-select
@@ -166,7 +214,7 @@
             :picker-options="{
       start: '00:00',
       step: '00:15',
-      end: '24:00',
+      end: '23:59',
       minTime: startTime
     }"
           ></el-time-select>
@@ -344,6 +392,54 @@
           <el-input v-model="editForm.street"></el-input>
         </el-form-item>
         <!-- 图片上传 -->
+        <!-- 效果图 -->
+         <el-form-item label="效果图:" :label-width="formLabelWidth" style="color:#000">
+          <el-upload
+            action
+            accept="image/*"
+            :multiple="true"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            name="uploadFile"
+            :file-list="rendering"
+            :http-request="httpRequest2"
+            :show-file-list="true"
+            limit=1
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible">
+            <img width="100%" :src="dialogImageUrl" alt>
+          </el-dialog>
+          <span style='font-size:12px'>支持jpg、png格式图片，不得大于2M</span> 
+        </el-form-item> 
+          <!-- 楼层 -->
+        
+          <el-form-item
+         
+          :label-width="formLabelWidth" style="color:#000"
+         
+          :label="'楼层'"
+          
+          :rules="{
+           required: true, message: '域名不能为空', trigger: 'blur'
+          }"
+       >
+        <div  v-for="(domain, index) in dynamicValidateForm.domains"
+           :key="domain.key"
+          :prop="'domains.' + index + '.value'" style='float:left'>
+           <el-input v-model="domain.value" style='width:120px;' 
+          
+          ></el-input>
+          <i class="el-icon-close" title="删除楼层" @click.prevent="removeDomain(domain)"   style='position: relative;top: 0;left: -23px;cursor:pointer;'></i>
+        </div>
+         
+         
+      </el-form-item> 
+        <el-form-item :label-width="formLabelWidth">
+           <el-button @click="addDomain">新增楼层</el-button>
+        </el-form-item> 
+        <!-- 平面图 -->
         <el-form-item label="平面图:" :label-width="formLabelWidth" style="color:#000" prop="picture">
           <el-upload
             action
@@ -353,7 +449,9 @@
             name="uploadFile"
             :file-list="picList"
             :http-request="httpRequest"
+            :on-remove="handleRemove"
             :show-file-list="true"
+            limit="5"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -369,7 +467,7 @@
             :picker-options="{
       start: '00:00',
       step: '00:15',
-      end: '24:00'
+      end: '23:59'
     }"
           ></el-time-select>
           <el-time-select
@@ -378,7 +476,7 @@
             :picker-options="{
       start: '00:00',
       step: '00:15',
-      end: '24:00',
+      end: '23:59',
       minTime: startTime
     }"
           ></el-time-select>
@@ -501,6 +599,13 @@ export default {
   // el:'.parkingManagement',
   data() {
     return {
+      rendering:[],//加显效果图
+       dynamicValidateForm: {
+          domains: [{
+            value: '' //楼层数据
+          }],
+         
+        },
       //筛选条件
       name: "",
       city: "",
@@ -545,6 +650,7 @@ export default {
       districtArr: [],
 
       ruleForm: {
+       
         name: "",
         acreage: "",
         city: "",
@@ -558,6 +664,7 @@ export default {
         openStatus: "",
         startTime: "",
         stopTime: "",
+        rendering:'',//效果图
         picture: "",
         chargeGroup: {
           name: "第一组",
@@ -594,6 +701,7 @@ export default {
         openStatus: "",
         startTime: "",
         stopTime: "",
+        rendering:'',//效果图
         picture: "",
         chargeGroup: {
           id: "",
@@ -781,6 +889,8 @@ export default {
       //alert($(event.currentTarget).attr("id"));
       var id = $(event.currentTarget).attr("id");
       this.picList = [];
+      this.rendering=[];
+      this.dynamicValidateForm.domains=[];
       this.dialogFormeditVisible = true;
       // this.editForm = Object.assign({}, row);
 
@@ -799,10 +909,29 @@ export default {
         .then(res => {
           console.log(res.data.dataArray);
           this.editForm = res.data.dataArray;
-          var obj = new Object();
-          obj.url = res.data.dataArray.picture;
-          this.picList.push(obj);
-          console.log(this.picList);
+          var showPics=res.data.dataArray.picture; //回显的图片
+          showPics=showPics.split(',');
+          console.log(showPics);
+          for(var i=0;i<showPics.length;i++){
+            var obj=new Object();
+            obj.url=showPics[i];
+            this.picList.push(obj);
+          }
+          console.log(this.picList);//平面图回显[{url:''},{url:''},...]
+          var obj2=new Object();
+          obj2.url=res.data.dataArray.rendering;
+
+          this.rendering.push(obj2)//回显的效果图
+          console.log(this.rendering);
+          //回显的楼层
+          var floors=(res.data.dataArray.floor).split(',');
+          console.log(floors);
+          for(var i=0;i<floors.length;i++){
+            var obj=new Object();
+            obj.value=floors[i];
+            this.dynamicValidateForm.domains.push(obj);
+          }
+          console.log(this.dynamicValidateForm.domains);
           _this.prov = res.data.dataArray.province;
           _this.dcity = res.data.dataArray.city;
           _this.ddistrict = res.data.dataArray.area;
@@ -813,14 +942,35 @@ export default {
       console.log(this.prov);
       console.log(_this.prov);
     },
-    handleDelete(index, row) {
-      console.log(index, row);
-    },
+     handleRemove(file, picList) {
+        console.log(file, picList);
+        this.picList=picList;
+        console.log(this.picList);
+      },
     //编辑保存
     saveEdit() {
       console.log(this.editForm);
-      //this.editForm.picture=this.picture;
-      this.editForm.createUser = 1;
+      var picLen=this.picList;
+      var newarr=[];
+      for(var i=0;i<picLen.length;i++){
+        if(picLen[i].url==undefined){
+          newarr.push(picLen[i])
+        }else{
+          newarr.push(picLen[i].url)
+        }
+      }
+     this.editForm.picture=String(newarr);
+      console.log(this.picList);
+      console.log(this.editForm.picture);
+       var floor=this.dynamicValidateForm.domains;//楼层[{value: "1"}, {value: "2", key: 1550477395420}]
+            var arr=[];
+            for(var i=0;i<floor.length;i++){
+                arr.push(floor[i].value);
+            };
+            console.log(arr);
+            arr=arr.join(',');
+            this.editForm.floor=arr; //楼层 1,2格式
+      //this.editForm.createUser = 1;
       this.editForm.province = this.prov;
       this.editForm.city = this.dcity;
       this.editForm.area = this.ddistrict;
@@ -1014,10 +1164,27 @@ export default {
             this.priceError1 = false;
             this.timeError1 = false;
             var datas = this.$refs[formName].model;
-            datas.createUser = 1;
+            datas.createUser = sessionStorage.getItem("managerId");
             // //datas.ruleForm.province=provs;
             // datas.ruleForm.area=areas;
             // datas.ruleForm.city=cit;
+            var floor=this.dynamicValidateForm.domains;//楼层[{value: "1"}, {value: "2", key: 1550477395420}]
+            var arr=[];
+            for(var i=0;i<floor.length;i++){
+                arr.push(floor[i].value);
+            };
+            console.log(arr);
+            arr=arr.join(',');
+            datas.floor=arr; //楼层 1,2格式
+            var pictures=this.picList;//平面图
+            console.log(pictures);
+            console.log(pictures.length);
+            if(pictures.length==1){
+              datas.picture=String(this.picList)
+            }else{
+              datas.picture=this.picList.join(',')//多张平面图
+            }
+           
             console.log(datas);
             this.$http
               .post(
@@ -1034,7 +1201,7 @@ export default {
                 console.log(res.data);
 
                 //$("#add").hide();
-                this.$message.error(res.data.errorMsg);
+                this.$message.success(res.data.errorMsg);
                 this.handleUserList(1);
                 this.dialogFormVisible = false;
               })
@@ -1048,6 +1215,34 @@ export default {
         }
       });
     },
+    //效果图
+    imgAdd2(imgUrl) {
+      this.imgurlbase = imgUrl;
+
+      var b;
+      $.ajax({
+        type: "POST",
+        url: this.GLOBAL.imgUrl + "/air-api/space/upPic",
+        data: { uploadFile: imgUrl },
+        dataType: "json",
+        async: false,
+        success: function(data) {
+          console.log(data);
+          b = data.dataArray;
+
+          return b;
+        },
+        error: function(json) {
+          console.log(json);
+        }
+      });
+
+      console.log(b);
+      this.ruleForm.rendering = b;
+      this.editForm.rendering = b;
+      
+    },
+    //平面图
     imgAdd(imgUrl) {
       this.imgurlbase = imgUrl;
 
@@ -1070,8 +1265,27 @@ export default {
       });
 
       console.log(a);
-      this.ruleForm.picture = a;
-      this.editForm.picture = a;
+      // this.ruleForm.picture = a;
+      //this.editForm.picture +=','+a;
+      console.log(this.picList);
+      this.picList.push(a);
+    },
+    //效果图上传
+     httpRequest2(file) {
+      //alert(999);
+
+      console.log(file.file);
+
+      var reader = new FileReader();
+      reader.readAsDataURL(file.file);
+
+      reader.onload = e => {
+        var imgurlbase = e.target.result.split(",");
+        imgurlbase.shift();
+        imgurlbase = imgurlbase.toString();
+        console.log(imgurlbase);
+        this.imgAdd2(imgurlbase);
+      };
     },
     //图片上传转流
     httpRequest(file) {
@@ -1117,7 +1331,19 @@ export default {
       } else {
         this.ddistrict = "";
       }
-    }
+    },
+    addDomain() {
+        this.dynamicValidateForm.domains.push({
+          value: '',
+          key: Date.now()
+        });
+      },
+      removeDomain(item) {
+        var index = this.dynamicValidateForm.domains.indexOf(item)
+        if (index !== -1) {
+          this.dynamicValidateForm.domains.splice(index, 1)
+        }
+      },
   },
 
   components: {},
