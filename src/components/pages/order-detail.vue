@@ -3,14 +3,13 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/index-parking' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/order-management' }">订单管理</el-breadcrumb-item>
-       <el-breadcrumb-item >订单详情</el-breadcrumb-item>
+      <el-breadcrumb-item>订单详情</el-breadcrumb-item>
       <!-- <el-breadcrumb-item>网关管理详情</el-breadcrumb-item> -->
       <!-- <el-breadcrumb-item>活动详情</el-breadcrumb-item>-->
     </el-breadcrumb>
     <div>
       <div>
         <el-row>
-         
           <el-button type="primary" @click="open2" size="small">退款</el-button>
         </el-row>
         <!-- 版本信息 -->
@@ -27,9 +26,7 @@
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">车牌号:</label>
-              <span>
-                 {{detailDatas.licensePlate}}
-              </span>
+              <span>{{detailDatas.licensePlate}}</span>
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">预订时间:</label>
@@ -37,47 +34,47 @@
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">出场时间:</label>
-               <span v-if='detailDatas.settlementTime==null '>--</span>
+              <span v-if="detailDatas.settlementTime==null ">--</span>
               <span v-else>{{detailDatas.settlementTime|formatTime('YMD')}}</span>
-             
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">停车时长:</label>
-              <span>{{detailDatas.parkingTime < 60 ? detailDatas.parkingTime+"分钟":detailDatas.parkingTime==60?"1小时":detailDatas.parkingTime>60?"1小时"+detailDatas.parkingTime-60+"分钟":''}}</span>
+              <!-- <span>{{detailDatas.parkingTime < 60 ? detailDatas.parkingTime+"分钟":detailDatas.parkingTime==60?"1小时":detailDatas.parkingTime > 60? "1小时" + detailDatas.parkingTime-60+"分钟":''}}</span> -->
+              <span v-if='detailDatas.parkingTime==0'>0分钟</span>
+              <span v-else>{{ChangeHourMinutestr(detailDatas.parkingTime)}}分钟</span>
             </div>
-             <div class="form-inline">
+            <div class="form-inline">
               <label for="totalNum" class="control-label">停车费用:</label>
               <span>{{detailDatas.totalFee}}元</span>
             </div>
-              <div class="form-inline">
+            <div class="form-inline">
               <label for="totalNum" class="control-label">订单状态:</label>
               <span>{{detailDatas.orderStatus==1?"已预定":detailDatas.orderStatus==2?"停车中":detailDatas.orderStatus==3?"待支付":detailDatas.orderStatus==4?"已结束":detailDatas.orderStatus==5?"已取消":detailDatas.orderStatus==6?'待处理':detailDatas.orderStatus==7?"取消中":''}}</span>
             </div>
-              <div class="form-inline">
+            <div class="form-inline">
               <label for="totalNum" class="control-label">支付方式:</label>
               <span>{{detailDatas.payType==0?"未支付":detailDatas.payType==1?"微信支付":detailDatas.payType==2?"支付宝支付":detailDatas.payType==3?"余额支付":''}}</span>
             </div>
-              <!-- <div class="form-inline">
+            <!-- <div class="form-inline">
               <label for="totalNum" class="control-label">余额支付:</label>
               <span>{{detailDatas.remark}}</span>
-            </div> -->
-             <!-- <div class="form-inline">
+            </div>-->
+            <!-- <div class="form-inline">
               <label for="totalNum" class="control-label">支付宝支付:</label>
               <span>{{detailDatas.remark}}</span>
-            </div> -->
-             <div class="form-inline">
+            </div>-->
+            <div class="form-inline">
               <label for="totalNum" class="control-label">支付时间:</label>
               <span>{{detailDatas.payTime|formatTime('YMD') }}</span>
             </div>
-           
           </div>
         </div>
-      
+
         <!-- 车位信息 -->
         <div id="space_details" class="panel panel-default">
           <div class="panel-heading">停车场</div>
           <div class="panel-body">
-             <div class="form-inline">
+            <div class="form-inline">
               <label for="place-name" class="control-label">停车场:</label>
               <span>{{detailDatas.parkingLotName}}</span>
             </div>
@@ -93,14 +90,14 @@
               <label for="totalNum" class="control-label">价格:</label>
               <span>{{detailDatas.price}}</span>
             </div>
-             <div class="form-inline">
+            <div class="form-inline">
               <label for="area" class="control-label">免费时长:</label>
               <span>{{detailDatas.freeTime}}分钟</span>
             </div>
           </div>
         </div>
         <!-- 退款信息 -->
-         <!-- <div id="space_details" class="panel panel-default">
+        <!-- <div id="space_details" class="panel panel-default">
           <div class="panel-heading">退款信息</div>
           <div class="panel-body">
             <div class="form-inline">
@@ -124,16 +121,14 @@
               <span>{{detailDatas.createLoginName}}</span>
             </div>
           </div>
-        </div> -->
+        </div>-->
       </div>
     </div>
- 
 
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑网关" :visible.sync="dialogFormeditVisible" width="35%" id="edit">
-     
       <el-form :model="editForm">
-         <el-form-item label="软件系统:" :label-width="formLabelWidth" style="color:#000" prop="name">
+        <el-form-item label="软件系统:" :label-width="formLabelWidth" style="color:#000" prop="name">
           <select v-model="editForm.appType" @change="handleUserList(1)" class="myselect">
             <option value>选择软件系统（全部）</option>
             <option value="1">HISS停车_iOS</option>
@@ -168,12 +163,7 @@
           </el-upload>
         </el-form-item>
 
-        <el-form-item
-          label="apk地址"
-          :label-width="formLabelWidth"
-          style="color:#000"
-          prop="license"
-        >
+        <el-form-item label="apk地址" :label-width="formLabelWidth" style="color:#000" prop="license">
           <el-input autocomplete="off" v-model="editForm.apkUrl"></el-input>
         </el-form-item>
 
@@ -183,11 +173,11 @@
           style="color:#000"
           prop="isBindParkingLot"
         >
-          <select v-model="editForm.type"  class="myselect">
-          <option value>选择更新类型</option>
-          <option value="0">手动更新</option>
-          <option value="1">强制更新</option>
-        </select>
+          <select v-model="editForm.type" class="myselect">
+            <option value>选择更新类型</option>
+            <option value="0">手动更新</option>
+            <option value="1">强制更新</option>
+          </select>
         </el-form-item>
         <el-form-item
           label="版本描述:"
@@ -195,7 +185,7 @@
           style="color:#000"
           prop="parkingLotId"
         >
-            <el-input autocomplete="off" v-model="editForm.remark"></el-input>
+          <el-input autocomplete="off" v-model="editForm.remark"></el-input>
         </el-form-item>
       </el-form>
       <!-- 提交按扭 -->
@@ -204,11 +194,9 @@
         <el-button type="primary" @click="saveEdit()">确 定</el-button>
       </div>
     </el-dialog>
-    
   </div>
 </template>
 <script>
-
 import version from "./order-management.vue";
 export default {
   name: "orderDetail",
@@ -217,15 +205,14 @@ export default {
       dialogFormeditVisible: false,
       formLabelWidth: "105px",
 
-      
       dialogVisible: false,
       dialogBind: false, //绑定弹出框
-      parkingLotId:'',//停车场id
+      parkingLotId: "", //停车场id
       detailId: "", //详情ID,
       detailDatas: {}, //详情数据
-     
-      editForm:'',//编辑回显数据
-      server:'',//服务器网卡数据
+
+      editForm: "", //编辑回显数据
+      server: "" //服务器网卡数据
     };
   },
   methods: {
@@ -244,15 +231,14 @@ export default {
         .then(res => {
           console.log(res.data.dataArray);
           this.detailDatas = res.data.dataArray;
-          this.editForm=res.data.dataArray;
-          
+          this.editForm = res.data.dataArray;
         })
         .catch(res => {
           console.log("err");
         });
     },
     //删除弹出框
-   open2() {
+    open2() {
       var id = this.detailId;
       this.$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -261,7 +247,7 @@ export default {
       }).then(() => {
         this.$http
           .post(
-             this.GLOBAL.xgurl + "/park-api/park/version/deleteVersion",
+            this.GLOBAL.xgurl + "/park-api/park/version/deleteVersion",
             {
               id: id
             },
@@ -277,7 +263,7 @@ export default {
               type: "success",
               message: res.data.errorMsg
             });
-        //    this.getDetailData();
+            //    this.getDetailData();
           })
           .catch(res => {
             console.log("err");
@@ -289,7 +275,7 @@ export default {
       console.log(file);
       var formdata = new FormData(); //创建一个表单
       formdata.append("fileUrl", file);
-    //   formdata.append("className", "TGateway");
+      //   formdata.append("className", "TGateway");
       let _this = this;
       //调用接口传文件
       _this.$http
@@ -304,21 +290,19 @@ export default {
             type: "success",
             message: res.data.errorMsg
           });
-         
         })
         .catch(res => {
           console.log("err");
         });
     },
-   
-   
+
     //编辑保存
-    saveEdit(){
-        let _this = this;
-        console.log(this.editForm);
-       
-         this.dialogFormeditVisible=false;
-         this.$http
+    saveEdit() {
+      let _this = this;
+      console.log(this.editForm);
+
+      this.dialogFormeditVisible = false;
+      this.$http
         .post(
           this.GLOBAL.xgurl + "/park-api/park/version/addOrUpdateVersion",
           this.editForm,
@@ -330,10 +314,9 @@ export default {
         )
         .then(res => {
           console.log(res.data);
-           this.$message({
+          this.$message({
             type: "success",
-            message: res.data.errorMsg,
-           
+            message: res.data.errorMsg
           });
           _this.getDetailData();
         })
@@ -341,14 +324,26 @@ export default {
           console.log("err");
         });
     },
-    
+    ChangeHourMinutestr(str) {
+      if (str !== "0" && str !== "" && str !== null) {
+        return (
+          (Math.floor(str / 60).toString().length < 2
+            ? "" + Math.floor(str / 60).toString()
+            : Math.floor(str / 60).toString()) +
+          "小时" +
+          ((str % 60).toString().length < 2
+            ? "" + (str % 60).toString()
+            : (str % 60).toString())
+        );
+      } else {
+        return "";
+      }
+    }
   },
   created() {
-     this.detailId=sessionStorage.getItem('id');
+    this.detailId = sessionStorage.getItem("id");
     this.detailId = this.$route.params.id;
     this.getDetailData();
- 
-   
   }
 };
 </script>

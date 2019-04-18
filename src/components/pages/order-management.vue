@@ -25,8 +25,8 @@
            <option value="5">已取消</option>
            <option value="2">停车中</option>
            <option value="6">待处理</option>
-            <option value="7">取消中</option>
-          
+           <option value="7">取消中</option>
+           <option value="8">已退款</option>
            <!-- <option value="">已退款</option> -->
         </select>
        
@@ -89,18 +89,24 @@
              
 
               <td>{{item.createTime==null ?"--" : (item.createTime)|formatTime('YMD') }}</td>
-              <td v-if='item.settlementTime==null '>--</td>
+              <td v-if='item.settlementTime==null || item.orderStatus==6'>--</td>
               <td v-else>{{item.settlementTime|formatTime('YMD')}}</td>
               <td>{{(item.totalFee).toFixed(2)}}</td>
              
-              <td>{{item.orderStatus==1?"已预定":item.orderStatus==2?"停车中":item.orderStatus==3?"待支付":item.orderStatus==4?"已结束":item.orderStatus==5?"已取消":item.orderStatus==6?"待处理":item.orderStatus==7?"取消中":""}}</td>
+              <td>{{item.orderStatus==1?"已预定":item.orderStatus==2?"停车中":item.orderStatus==3?"待支付":item.orderStatus==4?"已结束":item.orderStatus==5?"已取消":item.orderStatus==6?"待处理":item.orderStatus==7?"取消中":item.orderStatus==8?"已退款":''}}</td>
               
-              <td>{{item.payType==0?"未支付":item.payType==1?"微信支付":item.payType==2?"支付宝支付":item.payType==3?"余额支付":''}}</td>
-              <td>{{item.payTime|formatTime('YMD')}}</td>
+              <td> <span v-if='item.orderStatus==1 || item.orderStatus==2 || item.orderStatus==6 ||item.orderStatus==3 || item.orderStatus==7'>--</span>
+                   <span v-else>
+                      {{item.payType==0?"未支付":item.payType==1?"微信支付":item.payType==2?"支付宝支付":item.payType==3?"余额支付":''}}
+                   </span>
+              </td>
+              <td> <span v-if='item.orderStatus==1 || item.orderStatus==2 || item.orderStatus==6 || item.orderStatus==3 || item.totalFee==0 || item.orderStatus==7'>--</span>
+                   <span v-else> {{item.payTime|formatTime('YMD')}}</span>
+               </td>
               <td>
                   <el-button size="mini" @click="getDescribe($event)" :detail-id="item.id">详情</el-button>
                  
-                <el-button size="mini" @click="open2($event)">退款</el-button>
+                  <el-button v-if='item.orderStatus==5' size="mini" @click="open2((item.totalFee).toFixed(2),item.id)">退款</el-button>
               </td>
               
             </tr>
@@ -119,6 +125,34 @@
       </div>
     </div>
 
+    <!-- 退款 -->
+    <el-dialog title="退款" :visible.sync="dialogFormeditVisible" width="28%" id="edit">
+      <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
+        <el-form-item
+          label="退款金额:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="password"
+        >
+          <el-input autocomplete="off" v-model="refundmoney"></el-input>
+          
+        </el-form-item>
+        <el-form-item
+          label="退款原因:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="password"
+        >
+          <el-input type="textarea" v-model='content'></el-input>
+          
+        </el-form-item>
+      </el-form>
+      <!-- 提交按扭 -->
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormeditVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+      </div>
+    </el-dialog>
   
 
    
@@ -136,11 +170,10 @@ export default {
       parkingSpaceLotId: "",
       startTime: "",
       endTime:'',
-      id:'',
-     
+      id:'', 
       //时间转换
       stime:'',
-
+      refundmoney:'',
       // 分页数据
       currentPage: 1, //当前页
       total: "", //总数
@@ -154,7 +187,7 @@ export default {
       queryParkingLotdata: "",
       dialogVisible: false,
      dialogImageUrl:'',
-    
+      content:'',
       tableData: "", //列表数据
     
       //添加数据
@@ -272,6 +305,41 @@ export default {
           console.log("err");
         });
     },
+    open2(refundmoney,id){
+      this.dialogFormeditVisible=true;
+      this.refundmoney=refundmoney; 
+      this.id=id;     
+    },
+    submitForm(){
+      this.$http
+          .post(
+            this.GLOBAL.xgurl + "/park-api/order/orderRefound",
+            {
+              id: this.id,
+              refundmoney:this.refundmoney,
+              content:this.content
+            },
+            {
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8"
+              }
+            }
+          )
+          .then(res => {
+            console.log(res.data);
+            this.dialogFormeditVisible=false;
+           
+            this.$message({
+              type: "success",
+              message: res.data.dataArray
+            });
+            this.id='';
+           this.handleUserList(currentPage)
+          })
+          .catch(res => {
+            console.log("err");
+          });
+    }
     
    
   },

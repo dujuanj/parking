@@ -168,13 +168,19 @@ export default {
       },
       //添加验证规则
       rules: {
-        password: [
+        name: [
           {
             required: true,
-            message: "请输入网关名称，不能为空",
+            message: "请输入组名称，不能为空",
             trigger: "blur"
-          },
-          { min: 6, max: 20, message: "长度在 6 到 20 个字符", trigger: "blur" }
+          }
+        ],
+        appEui:[
+          {
+            required: true,
+            message: "请输入组编号，不能为空",
+            trigger: "blur"
+          }
         ]
       }
     };

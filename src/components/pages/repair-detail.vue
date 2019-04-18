@@ -50,7 +50,8 @@
             </div>
              <div class="form-inline">
               <label for="totalNum" class="control-label">离场时间:</label>
-              <span>{{detailDatas.orderEndTime}}</span>
+              <span v-if='detailDatas.orderEndTime==null'>--</span>
+              <span v-else>{{detailDatas.orderEndTime | formatTime('YMDHMS')}}</span>
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">处理结果:</label>

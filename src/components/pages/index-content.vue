@@ -193,7 +193,7 @@ export default {
   font-size: 36px;
 }
 .count {
-  width: 200px;
+  width: 12%;
   height: 120px;
   background: #409eff;
   float: left;

@@ -143,7 +143,7 @@
     </div>
 
     <!-- 添加弹框 -->
-    <el-dialog title="添加地锁" :visible.sync="dialogFormVisible" width="35%" id="add">
+    <el-dialog title="添加地锁" :visible.sync="dialogFormVisible" width="35%"  id="add">
       <p style="width:100%;color: #67c23a;margin-top: -25px;margin-bottom: 17px">填写地锁信息>>></p>
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
         <el-form-item label="地锁名称:" :label-width="formLabelWidth" style="color:#000" prop="name">
@@ -153,15 +153,15 @@
           label="地锁编号:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="gatewayMac"
+          prop="devEui"
         >
-          <el-input autocomplete="off" v-model="ruleForm.devEui"></el-input>
+          <el-input autocomplete="off" v-model="ruleForm.devEui" ></el-input>
         </el-form-item>
         <el-form-item
           label="*所属组:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="serverId"
+          prop="appEui"
         >
           <select v-model="ruleForm.appEui"  class="myselect">
             <option value="">选择所属组</option>
@@ -173,7 +173,7 @@
           label="AppKey"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="license"
+          prop="appKey"
         >
           <el-input autocomplete="off" v-model="ruleForm.appKey"></el-input>
         </el-form-item>
@@ -184,7 +184,7 @@
           label="*验证码:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="isBindParkingLot"
+          prop="authCode"
         >
           <el-input autocomplete="off" v-model="ruleForm.authCode"></el-input>
         </el-form-item>
@@ -192,7 +192,7 @@
           label="CLASSC模式:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="parkingLotId"
+          prop="isClassc"
         >
           <select @change="handleUserList(1)" class="myselect" v-model="ruleForm.isClassc">
             <option value="false">否</option>
@@ -294,7 +294,7 @@
           label="绑定车位:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="parkingLotId"
+          prop="isBindParkingSpace"
         >
           <select  class="myselect" v-model="ruleForm.isBindParkingSpace">
             <option value=''>选择是否绑定车位</option>
@@ -307,6 +307,7 @@
           :label-width="formLabelWidth"
           style="color:#000"
           prop="parkingLotId"
+          v-if='ruleForm.isBindParkingSpace==1'
         >
           <select class="myselect" v-model="ruleForm.parkingLotId" @change="getLot($event)">
           <option value>选择绑定的停车场(全部)</option>
@@ -317,7 +318,8 @@
           label="选择车位:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="parkingLotId"
+          prop="parkingSpaceId"
+          v-if='ruleForm.isBindParkingSpace==1'
         >
           <select class="myselect" v-model="ruleForm.parkingSpaceId" >
           <option value=''>选择要绑定的车位</option>
@@ -609,12 +611,45 @@ export default {
         name: [
           {
             required: true,
-            message: "请输入网关名称，不能为空",
+            message: "请输入地锁名称，不能为空",
             trigger: "blur"
           }
         ],
-       
-        
+        devEui:[
+           {
+            required: true,
+            message: "请输入地锁编号，不能为空",
+            trigger: "blur"
+          }
+        ],
+        appEui:[
+          {
+            required: true,
+            message: "请选择所属组，不能为空",
+            trigger: "blur"
+          }
+        ],
+        appKey:[
+          {
+            required: true,
+            message: "输入appKey，不能为空",
+            trigger: "blur"
+          }
+        ],
+        authCode:[
+          {
+            required: true,
+            message: "输入验证码，不能为空",
+            trigger: "blur"
+          }
+        ],
+        isBindParkingSpace:[
+           {
+            required: true,
+            message: "选择绑定车位，不能为空",
+            trigger: "blur"
+          }
+        ]
       
       }
     };
@@ -696,7 +731,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert("submit!");
+         
           var datas = this.$refs[formName].model;
           datas.createUser=sessionStorage.getItem("managerId"),
           console.log(datas);
@@ -932,7 +967,19 @@ export default {
 </script>
 
 
-<style scoped>
+<style>
+.lock #add .el-dialog,.lock #edit .el-dialog{
+  display:flex!important;
+  flex-direction:column!important;
+  max-height: calc(70% );
+   max-width: calc(100% - 30px)
+}
+
+.lock #add .el-dialog__body,.lock #edit .el-dialog__body{
+      overflow:auto!important
+}
+
+
 .el-pagination {
   text-align: right;
   margin-top: 15px;

@@ -114,7 +114,7 @@
           <el-input autocomplete="off" v-model="ruleForm.loginName"></el-input>
         </el-form-item>
         <el-form-item
-          label="*登录密码:"
+          label="登录密码:"
           :label-width="formLabelWidth"
           style="color:#000"
           prop="password"
@@ -277,7 +277,35 @@ export default {
             trigger: "blur"
           },
          
-        ]
+        ],
+        username:[
+          {
+            required: true,
+            message: "请输入用户名，不能为空",
+            trigger: "blur"
+          },
+        ],
+      loginName:[
+         {
+            required: true,
+            message: "请输入登陆帐号，不能为空",
+            trigger: "blur"
+          },
+      ],
+      enable:[
+         {
+            required: true,
+            message: "选择启用状态，不能为空",
+            trigger: "change"
+          },
+      ],
+      roleId:[
+        {
+            required: true,
+            message: "选择角色类型，不能为空",
+            trigger: "change"
+          },
+      ]
       }
     };
   },
