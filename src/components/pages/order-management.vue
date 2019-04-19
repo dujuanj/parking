@@ -331,7 +331,7 @@ export default {
            
             this.$message({
               type: "success",
-              message: res.data.dataArray
+              message: res.data.errorMsg
             });
             this.id='';
            this.handleUserList(currentPage)

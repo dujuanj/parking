@@ -111,7 +111,7 @@
     <el-dialog title="添加广告" :visible.sync="dialogFormVisible" width="35%" id="add">
      
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
-        <el-form-item label="应用场景:" :label-width="formLabelWidth" style="color:#000" >
+        <el-form-item label="应用场景:" :label-width="formLabelWidth" style="color:#000" prop='usedScene'>
           <select v-model="ruleForm.usedScene"  class="myselect">
            <option value>选择应用场景(全部)</option>
           <!-- <option :value="item.id" v-for="item in queryParkingLotdata">{{item.name}}</option> -->
@@ -123,7 +123,7 @@
           label="应用位置:"
           :label-width="formLabelWidth"
           style="color:#000"
-       
+          prop='name'
         >
           <select v-model="ruleForm.name"  class="myselect">
             <option value="">选择应用位置(全部)</option>
@@ -136,7 +136,7 @@
           label="广告性质:"
           :label-width="formLabelWidth"
           style="color:#000"
-        
+          prop='type'
         >
           <select v-model="ruleForm.type"  class="myselect">
             <option value="">选择广告性质</option>
@@ -150,7 +150,7 @@
           label="位置序号"
           :label-width="formLabelWidth"
           style="color:#000"
-          
+          prop='number'
         >
           <el-input autocomplete="off" v-model="ruleForm.number"></el-input>
         </el-form-item>
@@ -197,7 +197,7 @@
           label="启用状态:"
           :label-width="formLabelWidth"
           style="color:#000"
-       
+          prop='status'
         >
           <select v-model="ruleForm.status"  class="myselect">
             <option value="">选择启用状态</option>
@@ -211,7 +211,7 @@
           label="跳转链接"
           :label-width="formLabelWidth"
           style="color:#000"
-        
+          prop='jumpUrl'
         >
           <el-input autocomplete="off" v-model="ruleForm.jumpUrl"></el-input>
         </el-form-item>
@@ -219,7 +219,7 @@
           label="广告描述"
           :label-width="formLabelWidth"
           style="color:#000"
-          
+          prop='content'
         >
           <el-input autocomplete="off" v-model="ruleForm.content"></el-input>
         </el-form-item>
@@ -320,7 +320,7 @@
           label="启用状态:"
           :label-width="formLabelWidth"
           style="color:#000"
-       
+
         >
           <select v-model="editForm.status"  class="myselect">
             <option value="">选择启用状态</option>
@@ -395,6 +395,8 @@ export default {
         endTime: "",
         jumpUrl:'',
         view:'',
+        type:'',
+        name:''
       },
       //编辑数据
       editForm: {
@@ -407,48 +409,57 @@ export default {
         endTime: "",
         jumpUrl:'',
         view:'',
+        type:'',
+        name:''
       },
       //添加验证规则
       rules: {
         name: [
           {
             required: true,
-            message: "请输入网关名称，不能为空",
+            message: "请选择应用位置，不能为空",
             trigger: "blur"
           }
         ],
-        gatewayMac: [
+        usedScene: [
           {
             required: true,
-            message: "请输入网关编号，不能为空",
+            message: "请选择应用场景，不能为空",
             trigger: "blur"
           }
         ],
-        serverId: [
+        type: [
           {
             required: true,
-            message: "请输入服务器网卡，不能为空",
+            message: "请选择广告性质，不能为空",
             trigger: "change"
           }
         ],
-        license: [
+        number: [
           {
             required: true,
-            message: "请输入授权license，不能为空",
+            message: "请输入位置序号，不能为空",
             trigger: "blur"
           }
         ],
-        isBindParkingLot: [
+        status: [
           {
             required: true,
-            message: "请选择绑定停车场，不能为空",
+            message: "请选择启用状态，不能为空",
             trigger: "change"
           }
         ],
-        parkingLotId: [
+        jumpUrl: [
           {
             required: true,
-            message: "请选择停车场，不能为空",
+            message: "请输入跳转链接，不能为空",
+            trigger: "change"
+          }
+        ],
+        content:[
+           {
+            required: true,
+            message: "请输入广告描述，不能为空",
             trigger: "change"
           }
         ]

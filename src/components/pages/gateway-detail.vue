@@ -263,6 +263,7 @@ export default {
           this.getDetailData();
           console.log(res.data.dataArray);
           this.$message({
+            type: 'success',
             message: res.data.errorMsg
           });
         
@@ -297,6 +298,7 @@ export default {
           this.getDetailData();
           console.log(res.data.dataArray);
           this.$message({
+            type: 'success',
             message: res.data.errorMsg
           });
         })

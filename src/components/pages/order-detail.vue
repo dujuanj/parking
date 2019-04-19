@@ -10,7 +10,7 @@
     <div>
       <div>
         <el-row>
-          <el-button type="primary" @click="open2" size="small">退款</el-button>
+          <el-button v-if='detailDatas.orderStatus==5' type="primary" @click="open2((detailDatas.totalFee).toFixed(2),detailDatas.id)" size="small">退款</el-button>
         </el-row>
         <!-- 版本信息 -->
         <div id="space_details" class="panel panel-default">
@@ -125,75 +125,35 @@
       </div>
     </div>
 
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑网关" :visible.sync="dialogFormeditVisible" width="35%" id="edit">
-      <el-form :model="editForm">
-        <el-form-item label="软件系统:" :label-width="formLabelWidth" style="color:#000" prop="name">
-          <select v-model="editForm.appType" @change="handleUserList(1)" class="myselect">
-            <option value>选择软件系统（全部）</option>
-            <option value="1">HISS停车_iOS</option>
-            <option value="0">HISS停车_Android</option>
-          </select>
-        </el-form-item>
+     <!-- 退款 -->
+    <el-dialog title="退款" :visible.sync="dialogFormeditVisible" width="28%" id="edit">
+      <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
         <el-form-item
-          label="版本号:"
+          label="退款金额:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="gatewayMac"
+          prop="password"
         >
-          <el-input autocomplete="off" v-model="editForm.versionNo" placeholder="请输入版本号（如V1.0.0）"></el-input>
+          <el-input autocomplete="off" v-model="refundmoney"></el-input>
+          
         </el-form-item>
         <el-form-item
-          label="apk安装包:"
+          label="退款原因:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="serverId"
+          prop="password"
         >
-          <el-upload
-            style="display: inline; margin-left: 10px;margin-right: 10px;"
-            action="#"
-            ref="fileupload"
-            :show-file-list="false"
-            :before-upload="beforeUpload"
-          >
-            <el-button size="small" type="primary">
-              上传文件
-              <i class="el-icon-upload el-icon--right"></i>
-            </el-button>
-          </el-upload>
-        </el-form-item>
-
-        <el-form-item label="apk地址" :label-width="formLabelWidth" style="color:#000" prop="license">
-          <el-input autocomplete="off" v-model="editForm.apkUrl"></el-input>
-        </el-form-item>
-
-        <el-form-item
-          label="更新类型:"
-          :label-width="formLabelWidth"
-          style="color:#000"
-          prop="isBindParkingLot"
-        >
-          <select v-model="editForm.type" class="myselect">
-            <option value>选择更新类型</option>
-            <option value="0">手动更新</option>
-            <option value="1">强制更新</option>
-          </select>
-        </el-form-item>
-        <el-form-item
-          label="版本描述:"
-          :label-width="formLabelWidth"
-          style="color:#000"
-          prop="parkingLotId"
-        >
-          <el-input autocomplete="off" v-model="editForm.remark"></el-input>
+          <el-input type="textarea" v-model='content'></el-input>
+          
         </el-form-item>
       </el-form>
       <!-- 提交按扭 -->
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormeditVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveEdit()">确 定</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
     </el-dialog>
+
   </div>
 </template>
 <script>
@@ -204,13 +164,13 @@ export default {
     return {
       dialogFormeditVisible: false,
       formLabelWidth: "105px",
-
+      content:'',
       dialogVisible: false,
       dialogBind: false, //绑定弹出框
       parkingLotId: "", //停车场id
       detailId: "", //详情ID,
       detailDatas: {}, //详情数据
-
+      refundmoney:'',
       editForm: "", //编辑回显数据
       server: "" //服务器网卡数据
     };
@@ -237,38 +197,10 @@ export default {
           console.log("err");
         });
     },
-    //删除弹出框
-    open2() {
-      var id = this.detailId;
-      this.$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        this.$http
-          .post(
-            this.GLOBAL.xgurl + "/park-api/park/version/deleteVersion",
-            {
-              id: id
-            },
-            {
-              headers: {
-                "Content-Type": "application/json;charset=UTF-8"
-              }
-            }
-          )
-          .then(res => {
-            console.log(res.data);
-            this.$message({
-              type: "success",
-              message: res.data.errorMsg
-            });
-            //    this.getDetailData();
-          })
-          .catch(res => {
-            console.log("err");
-          });
-      });
+    open2(refundmoney,id){ //退款
+      this.dialogFormeditVisible=true;
+      this.refundmoney=refundmoney; 
+      this.id=id;     
     },
     //上传excel
     beforeUpload(file) {
@@ -296,33 +228,35 @@ export default {
         });
     },
 
-    //编辑保存
-    saveEdit() {
-      let _this = this;
-      console.log(this.editForm);
-
-      this.dialogFormeditVisible = false;
+    submitForm(){
       this.$http
-        .post(
-          this.GLOBAL.xgurl + "/park-api/park/version/addOrUpdateVersion",
-          this.editForm,
-          {
-            headers: {
-              "Content-Type": "application/json;charset=UTF-8"
+          .post(
+            this.GLOBAL.xgurl + "/park-api/order/orderRefound",
+            {
+              id: this.id,
+              refundmoney:this.refundmoney,
+              content:this.content
+            },
+            {
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8"
+              }
             }
-          }
-        )
-        .then(res => {
-          console.log(res.data);
-          this.$message({
-            type: "success",
-            message: res.data.errorMsg
+          )
+          .then(res => {
+            console.log(res.data);
+            this.dialogFormeditVisible=false;
+           
+            this.$message({
+              type: "success",
+              message: res.data.errorMsg
+            });
+            this.id='';
+           this.handleUserList(currentPage)
+          })
+          .catch(res => {
+            console.log("err");
           });
-          _this.getDetailData();
-        })
-        .catch(res => {
-          console.log("err");
-        });
     },
     ChangeHourMinutestr(str) {
       if (str !== "0" && str !== "" && str !== null) {

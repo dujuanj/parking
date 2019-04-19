@@ -156,9 +156,9 @@
       </div>
     </div>
     <!-- 绑定弹出框 -->
-    <el-dialog title="绑定停车场" :visible.sync="dialogBind" width="30%" :before-close="handleClose">
+    <el-dialog title="绑定停车场" :visible.sync="dialogBind" width="30%" >
        <select  class="myselect" v-model="parkingLotId" @change="getLot($event)">
-            <option value>选择所属停车场(全部)</option>
+            <option value=''>选择所属停车场(全部)</option>
             <option :value="item.id" v-for="item in queryParkingLotdata">{{item.name}}</option>
           </select>
            <select class="myselect" v-model="parkingLockId" >
@@ -171,46 +171,193 @@
       </span>
     </el-dialog>
 
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑网关" :visible.sync="dialogFormeditVisible" width="35%" id="edit">
-      <p style="width:100%;color: #67c23a;margin-top: -25px;margin-bottom: 17px">编辑网关信息>>></p>
-      <el-form>
-        <el-form-item label="*网关名称:" :label-width="formLabelWidth" style="color:#000">
-          <el-input autocomplete="off"></el-input>
+     <!-- 编辑弹出框 -->
+    <el-dialog title="编辑地锁" :visible.sync="dialogFormeditVisible" width="35%" id="edit">
+      <p style="width:100%;color: #67c23a;margin-top: -25px;margin-bottom: 17px">编辑地锁信息>>></p>
+       <el-form :model="editForm">
+        <el-form-item label="地锁名称:" :label-width="formLabelWidth" style="color:#000" prop="name">
+          <el-input autocomplete="off" v-model="editForm.name"></el-input>
         </el-form-item>
-        <el-form-item label="*网关编号:" :label-width="formLabelWidth" style="color:#000">
-          <el-input autocomplete="off"></el-input>
+        <el-form-item
+          label="地锁编号:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="gatewayMac"
+        >
+          <el-input autocomplete="off" v-model="editForm.devEui"></el-input>
         </el-form-item>
-        <el-form-item label="*服务器网卡:" :label-width="formLabelWidth" style="color:#000">
-          <el-select v-model="value" placeholder="选择服务器网卡">
-            <el-option value="有">有</el-option>
-            <el-option value="无">无</el-option>
-          </el-select>
+        <el-form-item
+          label="所属组:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="serverId"
+        >
+          <select v-model="editForm.appEui"  class="myselect">
+            <option value="">选择所属组</option>
+            <option :value="item.id" v-for='item in groups'>{{item.name}}</option>
+          </select>
         </el-form-item>
 
-        <el-form-item label="*授权license" :label-width="formLabelWidth" style="color:#000">
-          <el-input autocomplete="off"></el-input>
+        <el-form-item
+          label="AppKey"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="license"
+        >
+          <el-input autocomplete="off" v-model="editForm.appKey"></el-input>
         </el-form-item>
 
-        <p style="width:100%;color: #67c23a;margin-top:0;margin-bottom: 17px">编辑绑定信息 >>></p>
+      
 
-        <el-form-item label="*绑定停车场:" :label-width="formLabelWidth" style="color:#000">
-          <el-select v-model="value" placeholder="选择是否绑定停车场">
-            <el-option value="绑定">绑定</el-option>
-            <el-option value="不绑定">不绑定</el-option>
-          </el-select>
+        <el-form-item
+          label="验证码:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="isBindParkingLot"
+        >
+          <el-input autocomplete="off" v-model="editForm.authCode"></el-input>
         </el-form-item>
-        <el-form-item label="*选择停车场:" :label-width="formLabelWidth" style="color:#000">
-          <el-select v-model="value" placeholder="选择要绑定的停车场">
-            <el-option value="绑定">停车场1</el-option>
-            <el-option value="不绑定">停车场2</el-option>
-          </el-select>
+        <el-form-item
+          label="CLASSC模式:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="parkingLotId"
+        >
+          <select @change="handleUserList(1)" class="myselect" v-model="editForm.isClassc">
+            <option value>选择是否为*CLASSC模式</option>
+            <option value="true">是</option>
+            <option value="false">否</option>
+          </select>
+        </el-form-item>
+        <el-form-item
+          label="忽略重复包:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="parkingLotId"
+        >
+          <select @change="handleUserList(1)" class="myselect" v-model="editForm.relaxFcnt">
+            
+            <option value="true">是</option>
+            <option value="false">否</option>
+          </select>
+        </el-form-item>
+          <el-form-item
+          label="ADR间隔:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="isBindParkingLot"
+        >
+          <el-input autocomplete="off" v-model="editForm.adrInterval"></el-input>
+        </el-form-item>
+         <el-form-item
+          label="ADR补充:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="isBindParkingLot"
+        >
+          <el-input autocomplete="off" v-model="editForm.installationMargin"></el-input>
+        </el-form-item>
+          <el-form-item
+          label="经度:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="isBindParkingLot"
+        >
+          <el-input autocomplete="off" v-model="editForm.latitude"></el-input>
+        </el-form-item>
+         <el-form-item
+          label="纬度:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="isBindParkingLot"
+        >
+          <el-input autocomplete="off" v-model="editForm.longitude"></el-input>
+        </el-form-item>
+        <el-form-item
+          label="rx1dr:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="isBindParkingLot"
+        >
+          <el-input autocomplete="off" v-model="editForm.rx1dr"></el-input>
+        </el-form-item>
+         <el-form-item
+          label="Rx2DR:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="isBindParkingLot"
+        >
+          <el-input autocomplete="off" v-model="editForm.rx2dr"></el-input>
+        </el-form-item>
+         <el-form-item
+          label="RxDelay:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="isBindParkingLot"
+        >
+          <el-input autocomplete="off" v-model="editForm.rxdelay"></el-input>
+        </el-form-item>
+          <el-form-item
+          label="RxWindow:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="parkingLotId"
+        >
+          <select  class="myselect" v-model="editForm.rxwindows">
+            <option value=''>选择RxWindow</option>
+            <option value="rx1">rx1</option>
+            <option value="rx2">rx2</option>
+          </select>
+        </el-form-item>
+         <el-form-item
+          label="节点描述:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="isBindParkingLot"
+        >
+          <el-input autocomplete="off" v-model="editForm.description"></el-input>
+        </el-form-item>
+        <p>填写绑定信息 >></p>
+       
+          <el-form-item
+          label="绑定车位:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="parkingLotId"
+        >
+          <select  class="myselect" v-model="editForm.isBindParkingSpace">
+            <option value=''>选择是否绑定车位</option>
+            <option value="1">绑定</option>
+            <option value="0">不绑定</option>
+          </select>
+        </el-form-item>
+         <el-form-item
+          label="选择停车场:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="parkingLotId"
+        >
+          <select class="myselect" v-model="editForm.parkingLotId" @change="getLot($event)">
+          <option value>选择绑定的停车场(全部)</option>
+          <option :value="item.id" v-for="item in queryParkingLotdata">{{item.name}}</option>
+        </select>
+        </el-form-item>
+         <el-form-item
+          label="选择车位:"
+          :label-width="formLabelWidth"
+          style="color:#000"
+          prop="parkingLotId"
+        >
+          <select class="myselect" v-model="editForm.parkingSpaceId" >
+          <option value=''>选择要绑定的车位</option>
+          <option :value="item.parkingSpaceId" v-for="item in positions">{{item.parkingSpaceName}}</option>
+        </select>
         </el-form-item>
       </el-form>
       <!-- 提交按扭 -->
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormeditVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormeditVisible = false">确 定</el-button>
+        <el-button type="primary" @click="saveEdit()" @close="dialogFormeditVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -223,7 +370,7 @@ export default {
   data() {
     return {
       dialogFormeditVisible: false,
-      formLabelWidth: "105px",
+      formLabelWidth: "125px",
 
       dialogVisible: false,
       dialogBind: false, //绑定弹出框
@@ -234,7 +381,8 @@ export default {
       positions:'',//车位列表
        //查询所有停车场
       queryParkingLotdata: "",
-      editForm:''
+      editForm:'',
+      groups:'', 
     };
   },
   methods: {
@@ -253,6 +401,7 @@ export default {
         .then(res => {
           console.log(res.data.dataArray);
           this.detailDatas = res.data.dataArray;
+          this.editForm=res.data.dataArray;
         })
         .catch(res => {
           console.log("err");
@@ -260,23 +409,36 @@ export default {
     },
     //删除弹出框
     open2() {
+      var id =this.detailId;
       this.$confirm("此操作将永久删除该数据, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      })
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "删除成功!"
+      }).then(() => {
+        this.$http
+          .post(
+            this.GLOBAL.xgurl + "/park-api/park/parkingLock/deleteParkingLock",
+            {
+              id: id
+            },
+            {
+              headers: {
+                "Content-Type": "application/json;charset=UTF-8"
+              }
+            }
+          )
+          .then(res => {
+            console.log(res.data);
+            this.$message({
+              type: "success",
+              message: res.data.errorMsg
+            });
+            this.handleUserList(this.currentPage);
+          })
+          .catch(res => {
+            console.log("err");
           });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+      });
     },
     //解绑
     unbind(event) {
@@ -384,18 +546,81 @@ export default {
         .catch(res => {
           console.log("err");
         });
-   }
+   },
+    //查询所有组列表
+   getGroup(){
+     this.$http
+        .post(
+          this.GLOBAL.xgurl + "/park-api/park/parkingLock/findAllGroup",
+       
+          {
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8"
+            }
+          }
+        )
+        .then(res => {
+          console.log(res.data.dataArray);
+          this.groups = res.data.dataArray;
+        })
+        .catch(res => {
+          console.log("err");
+        });
+   },
+    //编辑保存
+    saveEdit(){
+        
+        console.log(this.editForm);
+        //this.editForm.picture=this.picture;
+        //this.editForm.createUser=1;
+         this.$http
+        .post(
+          this.GLOBAL.xgurl + "/park-api/park/parkingLock/addParkingLock",
+          this.editForm,
+          {
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8"
+            }
+          }
+        )
+        .then(res => {
+          console.log(res.data);
+          this.dialogFormeditVisible=false;
+           this.$message({
+            type: "success",
+            message: res.data.errorMsg,
+           
+          });
+          this.handleUserList(1);
+        })
+        .catch(res => {
+          console.log("err");
+        });
+    },
   },
   created() {
     this.detailId=sessionStorage.getItem('id');
     this.detailId = this.$route.params.id;
-
+     this.getGroup();
     this.getDetailData();
     this.queryParkingSpace();
   }
 };
 </script>
-<style scoped>
+<style>
+.lock-detail #add .el-dialog,.lock-detail #edit .el-dialog{
+  display:flex!important;
+  flex-direction:column!important;
+  max-height: calc(70% );
+   max-width: calc(100% - 30px)
+}
+
+.lock-detail #add .el-dialog__body,.lock-detail #edit .el-dialog__body{
+      overflow:auto!important
+}
+.form-inline .control-label{
+  width:100px!important;
+}
 .el-row {
   text-align: left;
   margin-left: 18px;

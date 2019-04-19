@@ -120,10 +120,10 @@
                    @click="bind($event)"
                 >绑定</a>
               </span> -->
-              <span >
+              <!-- <span >
                 <a href="javascript:;" style="margin-left:20px;"  :parkingLockId="detailDatas.parkingLockId"
                   :id='detailDatas.id'  @click="unbind($event)">解绑</a>
-              </span>
+              </span> -->
             </div>
           </div>
         </div>
@@ -281,7 +281,7 @@ export default {
     },
      getId(event){
         this.id=event.currentTarget.value;
-        alert(this.id);
+        // alert(this.id);
         this.getFloor(this.id);
     },
     //查询楼层
@@ -344,8 +344,7 @@ export default {
       })
     },
      //解绑
-    unbind(event) {
-      alert(111);
+    unbind(event) {      
        var id = $(event.currentTarget).attr("id");
        var parkingLockId= $(event.parkingLockId).attr("parkingLockId");
       this.$confirm('确定要删除与停车场的绑定吗？','提示',{

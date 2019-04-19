@@ -46,7 +46,7 @@
               <td style="width:5%">{{(currentPage-1)*10+(index+1)}}</td>
               <td>{{item.helpName}}</td>
               <td>{{item.jumpUrl}}</td>
-              <td>{{item.num}}</td>
+              <td style='width:5%'>{{item.num}}</td>
 
               <td>{{item.createUser}}</td>
 
@@ -75,17 +75,17 @@
     <!-- 添加弹框 -->
     <el-dialog title="添加APP使用帮助" :visible.sync="dialogFormVisible" width="35%" id="add">
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
-        <el-form-item label="问题名称:" :label-width="formLabelWidth" style="color:#000" prop="name">
+        <el-form-item label="问题名称:" :label-width="formLabelWidth" style="color:#000" prop="helpName">
           <el-input autocomplete="off" v-model="ruleForm.helpName"></el-input>
         </el-form-item>
-        <el-form-item label="跳转链接:" :label-width="formLabelWidth" style="color:#000" prop="appEui">
+        <el-form-item label="跳转链接:" :label-width="formLabelWidth" style="color:#000" prop="jumpUrl">
           <el-input autocomplete="off" v-model="ruleForm.jumpUrl"></el-input>
         </el-form-item>
         <el-form-item
           label="序号:"
           :label-width="formLabelWidth"
           style="color:#000"
-         
+          prop="num"
         >
           <el-input autocomplete="off" v-model="ruleForm.num" placeholder="请填写位置序号（1-99）"></el-input>
         </el-form-item>
@@ -93,7 +93,7 @@
           label="创建人:"
           :label-width="formLabelWidth"
           style="color:#000"
-        
+          prop="createUser"
         >
           <el-input autocomplete="off" v-model="ruleForm.createUser"></el-input>
         </el-form-item>
@@ -176,13 +176,34 @@ export default {
       },
       //添加验证规则
       rules: {
-        password: [
+        helpName: [
           {
             required: true,
-            message: "请输入网关名称，不能为空",
+            message: "请输入问题名称，不能为空",
             trigger: "blur"
-          },
-          { min: 6, max: 20, message: "长度在 6 到 20 个字符", trigger: "blur" }
+          }
+         
+        ],
+        jumpUrl:[
+           {
+            required: true,
+            message: "请输入链接地址，不能为空",
+            trigger: "blur"
+          }
+        ],
+        num:[
+          {
+            required: true,
+            message: "请输入序号，不能为空",
+            trigger: "blur"
+          }
+        ],
+        createUser:[
+          {
+            required: true,
+            message: "请输入创建人，不能为空",
+            trigger: "blur"
+          }
         ]
       }
     };

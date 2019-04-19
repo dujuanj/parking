@@ -158,7 +158,7 @@
           <el-input autocomplete="off" v-model="ruleForm.devEui" ></el-input>
         </el-form-item>
         <el-form-item
-          label="*所属组:"
+          label="所属组:"
           :label-width="formLabelWidth"
           style="color:#000"
           prop="appEui"
@@ -181,7 +181,7 @@
       
 
         <el-form-item
-          label="*验证码:"
+          label="验证码:"
           :label-width="formLabelWidth"
           style="color:#000"
           prop="authCode"
@@ -350,7 +350,7 @@
           <el-input autocomplete="off" v-model="editForm.devEui"></el-input>
         </el-form-item>
         <el-form-item
-          label="*所属组:"
+          label="所属组:"
           :label-width="formLabelWidth"
           style="color:#000"
           prop="serverId"
@@ -373,7 +373,7 @@
       
 
         <el-form-item
-          label="*验证码:"
+          label="验证码:"
           :label-width="formLabelWidth"
           style="color:#000"
           prop="isBindParkingLot"
@@ -386,8 +386,7 @@
           style="color:#000"
           prop="parkingLotId"
         >
-          <select @change="handleUserList(1)" class="myselect" v-model="editForm.isClassc">
-            <option value>选择是否为*CLASSC模式</option>
+          <select @change="handleUserList(1)" class="myselect" v-model="editForm.classc">
             <option value="true">是</option>
             <option value="false">否</option>
           </select>
@@ -724,7 +723,7 @@ export default {
         this.effectiveRange = "",
         this.isOnline = "",
         this.name = "",
-        this.status='',s
+        this.status='',
         this.handleUserList(1);
     },
     //添加网关

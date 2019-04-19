@@ -161,7 +161,7 @@
         <el-form-item label="业主姓名:" :label-width="formLabelWidth" style="color:#000" prop='userName' v-if='ruleForm.isBindUser==1'>
           <el-input autocomplete="off" style="width:43%" v-model="ruleForm.userName" placeholder="输入业主姓名"></el-input>
         </el-form-item>
-        <el-form-item label="*业主手机号:" :label-width="formLabelWidth" style="color:#000" prop='phone' v-if='ruleForm.isBindUser==1'>
+        <el-form-item label="业主手机号:" :label-width="formLabelWidth" style="color:#000" prop='phone' v-if='ruleForm.isBindUser==1'>
           <el-input autocomplete="off" style="width:43%" v-model="ruleForm.phone" placeholder="输入业主手机号"></el-input>
         </el-form-item>
         <el-form-item label="有效期限:" :label-width="formLabelWidth" style="color:#000" v-if='ruleForm.isBindUser==1'>
