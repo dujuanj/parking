@@ -98,7 +98,7 @@
     <!-- 添加弹框 -->
     <el-dialog title="添加版本" :visible.sync="dialogFormVisible" width="35%" id="add">
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
-        <el-form-item label="软件系统:" :label-width="formLabelWidth" style="color:#000" prop="name">
+        <el-form-item label="软件系统:" :label-width="formLabelWidth" style="color:#000" prop="appType">
           <select v-model="ruleForm.appType" @change="handleUserList(1)" class="myselect">
             <option value>选择软件系统（全部）</option>
             <option value="1">HISS停车_iOS</option>
@@ -109,7 +109,7 @@
           label="版本号:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="gatewayMac"
+          prop="versionNo"
         >
           <el-input autocomplete="off" v-model="ruleForm.versionNo" placeholder="请输入版本号（如V1.0.0）"></el-input>
         </el-form-item>
@@ -133,7 +133,7 @@
           </el-upload>
         </el-form-item>
 
-        <el-form-item label="apk地址" :label-width="formLabelWidth" style="color:#000" prop="license">
+        <el-form-item label="apk地址" :label-width="formLabelWidth" style="color:#000" prop="apkUrl">
           <el-input autocomplete="off" v-model="ruleForm.apkUrl"></el-input>
         </el-form-item>
 
@@ -141,7 +141,7 @@
           label="更新类型:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="isBindParkingLot"
+          prop="type"
         >
           <select v-model="ruleForm.type" @change="handleUserList(1)" class="myselect">
             <option value>选择更新类型</option>
@@ -153,7 +153,7 @@
           label="版本描述:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="parkingLotId"
+          prop="remark"
         >
           <el-input autocomplete="off" v-model="ruleForm.remark"></el-input>
         </el-form-item>
@@ -283,13 +283,41 @@ export default {
       },
       //添加验证规则
       rules: {
-        // name: [
-        //   {
-        //     required: true,
-        //     message: "请输入网关名称，不能为空",
-        //     trigger: "blur"
-        //   }
-        // ],
+        appType: [
+          {
+            required: true,
+            message: "请选择软件系统，不能为空",
+            trigger: "blur"
+          }
+        ],
+        versionNo:[
+            {
+            required: true,
+            message: "请输入版本号，不能为空",
+            trigger: "blur"
+          }
+        ],
+        apkUrl:[
+           {
+            required: true,
+            message: "apk地址，不能为空",
+            trigger: "blur"
+          }
+        ],
+        type:[
+           {
+            required: true,
+            message: "请选择更新类型，不能为空",
+            trigger: "blur"
+          }
+        ],
+        remark:[
+          {
+            required: true,
+            message: "请输入版本描述，不能为空",
+            trigger: "blur"
+          }
+        ]
       }
     };
   },
@@ -428,6 +456,7 @@ export default {
             message: '上传成功'
           });
           this.ruleForm.apkUrl = res.data.dataArray;
+          this.editForm.apkUrl=res.data.dataArray;
         })
         .catch(res => {
           console.log("err");
@@ -453,7 +482,7 @@ export default {
           console.log(res.data);
           this.$message({
             type: "success",
-            message: '保存功能'
+            message: res.data.errorMsg
           });
           _this.handleUserList(this.currentPage);
         })

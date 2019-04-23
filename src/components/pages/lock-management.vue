@@ -54,9 +54,9 @@
           class="myselect"
         >
           <option value>选择电量状态</option>
-          <option value="1">51%以上</option>
-          <option value="0">21%-50%</option>
-          <option value="0">11%-20%</option>
+          <option value="51">51%以上</option>
+          <option value="21-50">21%-50%</option>
+          <option value="11-20">11%-20%</option>
           <option value="0">小于10%</option>
         </select>
         <el-button type="info" size="small" @click="reset">重置</el-button>

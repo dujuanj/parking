@@ -51,9 +51,7 @@
         <table class="table table-striped" style="width: 97%;margin-top:10px;" v-cloak>
           <thead>
             <tr>
-              <!--   <th>
-                                            <input type="checkbox"  id="all_checked"/>
-              全选</th>-->
+            
               <th>序号</th>
               <th>应用场景</th>
               <th>通知类型</th>
@@ -78,16 +76,10 @@
               <td>{{item.title}}</td>
                <td>{{item.imageUrl}}</td>
               <td>{{item.text}}</td>
-             
-
               <td>{{item.pushGroup}}</td>
               <td>{{item.publisher}}</td>
-             
               <td>{{item.publishTime|formatTime('YMD')}}</td>
-              
-              <td>{{item.jumpUrl}}</td>
-
-              
+              <td>{{item.jumpUrl}}</td>              
             </tr>
           </tbody>
         </table>
@@ -108,7 +100,7 @@
     <el-dialog title="发布系统通知" :visible.sync="dialogFormVisible" width="35%" id="add">
     
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
-        <el-form-item label="应用场景:" :label-width="formLabelWidth" style="color:#000" prop="name">
+        <el-form-item label="应用场景:" :label-width="formLabelWidth" style="color:#000" prop="usedScene">
            <select class="myselect" v-model="ruleForm.usedScene" >
           <option value>选择应用场景(全部)</option>
            <option value="HISS AIR APP">HISS AIR APP</option>
@@ -118,7 +110,7 @@
           label="通知类型:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="gatewayMac"
+          prop="noticeType"
         >
           <select v-model="ruleForm.noticeType"  class="myselect">
           <option value>选择绑通知类型</option>
@@ -131,7 +123,7 @@
           label="标题:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="serverId"
+          prop="title"
         >
          <el-input autocomplete="off" v-model="ruleForm.title" placeholder="请输入标题"></el-input>
         </el-form-item>
@@ -166,7 +158,7 @@
           label="内容:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="isBindParkingLot"
+          prop="text"
         >
           <el-input type="textarea" v-model="ruleForm.text" placeholder="请输入内容"></el-input>
         </el-form-item>
@@ -174,7 +166,7 @@
           label="跳转链接:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="parkingLotId"
+          prop="jumpUrl"
         >
          <el-input v-model="ruleForm.jumpUrl" placeholder="请输入跳转链接"></el-input>
         </el-form-item>
@@ -182,7 +174,7 @@
           label="推送群体:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="gatewayMac"
+          prop="pushGroup"
         >
           <select v-model="ruleForm.pushGroup"  class="myselect">
           <option value>请选择绑推送群体</option>
@@ -245,13 +237,48 @@ export default {
       
       //添加验证规则
       rules: {
-        // name: [
-        //   {
-        //     required: true,
-        //     message: "请输入网关名称，不能为空",
-        //     trigger: "blur"
-        //   }
-        // ],
+        usedScene: [
+          {
+            required: true,
+            message: "请选择应用场景，不能为空",
+            trigger: "blur"
+          }
+        ],
+        noticeType:[
+          {
+            required: true,
+            message: "请选择通知类型，不能为空",
+            trigger: "blur"
+          }
+        ],
+        title:[
+          {
+            required: true,
+            message: "请输入标题，不能为空",
+            trigger: "blur"
+          }
+        ],
+        text:[
+          {
+             required: true,
+            message: "请输入内容，不能为空",
+            trigger: "blur"
+          }
+        ],
+        jumpUrl:[
+           {
+             required: true,
+            message: "请输入跳转链接，不能为空",
+            trigger: "blur"
+          }
+        ],
+        pushGroup:[
+           {
+             required: true,
+            message: "请选择推送群体，不能为空",
+            trigger: "blur"
+          }
+        ]
        
       }
     };

@@ -139,7 +139,13 @@ export default {
       tableData: "", //列表数据
       //添加数据
       ruleForm: {
-        result: ""
+        result: [
+           {
+            required: true,
+            message: "请输入反馈信息，不能为空",
+            trigger: "blur"
+          }
+        ]
        
       },
      

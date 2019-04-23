@@ -61,7 +61,8 @@
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">创建日期:</label>
-              <span>{{detailDatas.createTime | formatTime('YMDHMS')}}</span>
+              <span v-if='detailDatas.createTime==null'>--</span>
+              <span v-else>{{detailDatas.createTime | formatTime('YMDHMS')}}</span>
             </div>
           </div>
         </div>
@@ -239,12 +240,12 @@ export default {
           }
         })
         .then(res => {
-          console.log(res.data);
-          this.$message({
-            type: "success",
-            message: res.data.errorMsg
-          });
-         
+          console.log(res.data.dataArray);
+          // this.$message({
+          //   type: "success",
+          //   message: res.data.errorMsg
+          // });
+         this.detailDatas.apkUrl=res.data.dataArray;
         })
         .catch(res => {
           console.log("err");
