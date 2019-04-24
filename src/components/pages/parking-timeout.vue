@@ -75,7 +75,7 @@
           label="输入时长:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="parkingLotId"
+          prop="time"
         >
          <el-input v-model="ruleForm.time" placeholder="（大于0的纯数字）" style='width:300px'></el-input>小时
         </el-form-item>
@@ -100,7 +100,7 @@
           label="输入时长:"
           :label-width="formLabelWidth"
           style="color:#000"
-          prop="parkingLotId"
+          prop="time"
         >
          <el-input v-model="time" placeholder="（大于0的纯数字）" style='width:300px'></el-input>时
         </el-form-item>
@@ -142,13 +142,13 @@ export default {
       
       //添加验证规则
       rules: {
-        // name: [
-        //   {
-        //     required: true,
-        //     message: "请输入网关名称，不能为空",
-        //     trigger: "blur"
-        //   }
-        // ],
+        time: [
+          {
+            required: true,
+            message: "请输入时长，不能为空",
+            trigger: "blur"
+          }
+        ]
        
       }
     };

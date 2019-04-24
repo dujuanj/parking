@@ -379,13 +379,13 @@ export default {
       var a;
       $.ajax({
         type: "POST",
-        url: this.GLOBAL.imgUrl + "/air-api/space/upPic",
-        data: { uploadFile: imgUrl },
-        dataType: "json",
+      url:'http://192.168.10.32:9106/file/uploadFileData',
+        data: { uploadFile: imgUrl,fileType:'jpg' },
+        // dataType: "json",
         async: false,
         success: function(data) {
           console.log(data);
-          a = data.dataArray;
+          a = data;
 
           return a;
         },

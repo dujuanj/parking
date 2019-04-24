@@ -42,7 +42,7 @@
             </div>
              <div class="form-inline">
               <label for="totalNum" class="control-label">报修时间:</label>
-              <span>{{detailDatas.updateTime| formatTime('YMDHMS')}}</span>
+              <span>{{detailDatas.orderEndTime| formatTime('YMDHMS')}}</span>
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">状态:</label>
