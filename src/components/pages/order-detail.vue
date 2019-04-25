@@ -49,7 +49,7 @@
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">订单状态:</label>
-              <span>{{detailDatas.orderStatus==1?"已预定":detailDatas.orderStatus==2?"停车中":detailDatas.orderStatus==3?"待支付":detailDatas.orderStatus==4?"已结束":detailDatas.orderStatus==5?"已取消":detailDatas.orderStatus==6?'待处理':detailDatas.orderStatus==7?"取消中":''}}</span>
+              <span>{{detailDatas.orderStatus==1?"已预定":detailDatas.orderStatus==2?"停车中":detailDatas.orderStatus==3?"待支付":detailDatas.orderStatus==4?"已结束":detailDatas.orderStatus==5?"已取消":detailDatas.orderStatus==6?'待处理':detailDatas.orderStatus==7?"取消中":detailDatas.orderStatus==8?"已退款":''}}</span>
             </div>
             <div class="form-inline">
               <label for="totalNum" class="control-label">支付方式:</label>

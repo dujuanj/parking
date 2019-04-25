@@ -217,7 +217,7 @@ export default {
 .login_wrap {
   width: 572px;
   margin: 0 auto;
-  padding-top: 210px;
+  padding-top: 7%;
   color: #fff;
 }
 .Subtitle {

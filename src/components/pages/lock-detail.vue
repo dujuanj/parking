@@ -192,7 +192,7 @@
           style="color:#000"
           prop="serverId"
         >
-          <select v-model="editForm.appEui"  class="myselect">
+          <select v-model="editForm.groupId"  class="myselect">
             <option value="">选择所属组</option>
             <option :value="item.id" v-for='item in groups'>{{item.name}}</option>
           </select>
