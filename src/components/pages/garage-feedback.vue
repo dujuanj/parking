@@ -94,9 +94,9 @@
 
     <!-- 处理弹出框 -->
     <el-dialog title="处理车场信息反馈" :visible.sync="dialogFormeditVisible" width="35%" id="edit">
-      <el-form :model="editForm" ref="ruleForm" :rules="rules">
+      <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
        <el-form-item label="填写:" :label-width="formLabelWidth" style="color:#000"  prop="result">
-         <textarea name="" id="" cols="55" rows="3" v-model="result"></textarea>
+         <textarea name="" id="" cols="55" rows="3" v-model="ruleForm.result"></textarea>
         </el-form-item>
       </el-form>
       <!-- 提交按扭 -->
@@ -139,13 +139,7 @@ export default {
       tableData: "", //列表数据
       //添加数据
       ruleForm: {
-        result: [
-           {
-            required: true,
-            message: "请输入反馈信息，不能为空",
-            trigger: "blur"
-          }
-        ]
+        result:''
        
       },
      

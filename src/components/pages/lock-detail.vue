@@ -402,6 +402,25 @@ export default {
           console.log(res.data.dataArray);
           this.detailDatas = res.data.dataArray;
           this.editForm=res.data.dataArray;
+              //车位接口
+         this.$http
+        .post(
+          this.GLOBAL.xgurl + "/park-api/park/parkingLock/findParkingSpaceByParkingLotId",
+          {parkingLotId:this.editForm.parkingLotId},
+          {
+            headers: {
+              "Content-Type": "application/json;charset=UTF-8"
+            }
+          }
+        )
+        .then(res => {
+          console.log(res.data.dataArray);
+          this.positions = res.data.dataArray;
+        })
+        .catch(res => {
+          console.log("err");
+        });
+
         })
         .catch(res => {
           console.log("err");
@@ -604,6 +623,7 @@ export default {
      this.getGroup();
     this.getDetailData();
     this.queryParkingSpace();
+    
   }
 };
 </script>

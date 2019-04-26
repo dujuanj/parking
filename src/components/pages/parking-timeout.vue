@@ -217,7 +217,16 @@ export default {
               console.log(res.data);
 
               //$("#add").hide();
-              this.$message.success(res.data.dataArray);
+             
+              if(res.data.isSuccess=='error'){
+                 this.$message({
+                  message:res.data.errorMsg,
+                  type: 'success',
+              })
+              }else{
+                this.$message.success(res.data.dataArray);
+              }
+             
               this.dialogFormVisible = false;
               this.handleUserList(0);
               

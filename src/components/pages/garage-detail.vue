@@ -74,17 +74,17 @@
       </div>
     </div>
    
- <!-- 处理弹出框 -->
+   <!-- 处理弹出框 -->
     <el-dialog title="处理车场信息反馈" :visible.sync="dialogFormeditVisible" width="35%" id="edit">
-      <el-form :model="editForm">
-       <el-form-item label="填写:" :label-width="formLabelWidth" style="color:#000" >
-         <textarea name="" id="" cols="55" rows="3" v-model="result"></textarea>
+      <el-form :model="ruleForm" ref="ruleForm" :rules="rules">
+       <el-form-item label="填写:" :label-width="formLabelWidth" style="color:#000"  prop="result">
+         <textarea name="" id="" cols="55" rows="3" v-model="ruleForm.result"></textarea>
         </el-form-item>
       </el-form>
       <!-- 提交按扭 -->
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormeditVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveEdit()">确 定</el-button>
+        <el-button type="primary" @click="saveEdit('ruleForm')">确 定</el-button>
       </div>
     </el-dialog>
   
@@ -110,6 +110,22 @@ export default {
       detailDatas: {}, //详情数据
        //查询所有停车场
       queryParkingLotdata: "",
+       //添加数据
+      ruleForm: {
+        result:''
+       
+      },
+     
+      //添加验证规则
+      rules: {
+        result: [
+          {
+            required: true,
+            message: "请输入反馈信息，不能为空",
+            trigger: "blur"
+          }
+        ]
+      }
      
     };
   },
@@ -145,16 +161,17 @@ export default {
       this.dialogFormeditVisible = true;
      
     },
-     //处理确定
-    saveEdit(){
-        
-         this.$http
+    //处理确定
+    saveEdit(formName){
+         this.$refs[formName].validate(valid => {
+            if (valid) {
+                 this.$http
         .post(
           this.GLOBAL.xgurl + "/park-api/park/infofeedback/handler",
           {
             id:this.detailId,
-            result:this.result,
-            createUser:sessionStorage.getItem("username")
+            result:this.ruleForm.result,
+            createUser:sessionStorage.getItem("managerId"),
             },
           {
             headers: {
@@ -176,6 +193,9 @@ export default {
         .catch(res => {
           console.log("err");
         });
+            }
+          });
+        
     },
 
   },
